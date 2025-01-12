@@ -3,6 +3,9 @@
     --color2: #edf2f4;
 }
 
+.image{
+    font-size: 3rem;
+}
 
 .form {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
@@ -20,7 +23,7 @@
 
 .input {
     min-height: 2rem;
-    border: 2px solid lightgray;
+    border: 2px solid gray;
     border-radius: 5px;
     padding: 10px;
 }

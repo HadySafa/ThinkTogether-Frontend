@@ -60,7 +60,6 @@ function Login() {
       usernameField.current.value = "";
       passwordField.current.value = "";
     }
-    if (responseData) console.log(responseData);
   }, [responseData,error]);
 
   return (
