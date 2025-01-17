@@ -1,18 +1,42 @@
 import styles from "./style.module.css";
-import { useState, useEffect, useRef } from "react";
-import { CiLogin } from "react-icons/ci";
+import { useState, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 
-  const [responseData, setResponseData] = useState(null);
-  const [error, setError] = useState(null);
-
-  const [usernameMissing, setUsernameMissing] = useState(null);
-  const [passwordMissing, setPasswordMissing] = useState(null);
-
   const usernameField = useRef(null);
   const passwordField = useRef(null);
+  const navigate = useNavigate();
 
+  // form validation
+  const [usernameMissing, setUsernameMissing] = useState(null);
+  const [passwordMissing, setPasswordMissing] = useState(null);
+  function handleBlur(caller) {
+    if (caller == "username" && usernameField.current.value) {
+      setUsernameMissing(false);
+      setError(false)
+    }
+    if (caller == "password" && passwordField.current.value) {
+      setPasswordMissing(false);
+      setError(false)
+    }
+  }
+  function handleSubmission(e) {
+    e.preventDefault();
+    const username = usernameField.current.value;
+    const password = passwordField.current.value;
+    if (!username) setUsernameMissing(true)
+    if (!password) setPasswordMissing(true)
+    if (username && password) {
+      verifyLogin(username, password);
+      setUsernameMissing(false)
+      setPasswordMissing(false)
+    }
+  }
+
+
+  // fetch api and handle response
+  const [error, setError] = useState(null);
   async function verifyLogin(username, password) {
     const url = "http://localhost/SharingPlatform/api.php/Users/Login";
     const requestData = {
@@ -21,7 +45,6 @@ function Login() {
     };
     try {
       setError(false)
-      setResponseData("")
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -32,40 +55,22 @@ function Login() {
       if (!response.ok) throw new Error("Login Failed");
       const data = await response.json();
       if (data) {
-        setResponseData(data.message);
         sessionStorage.setItem("token", data.token);
+        navigate('/Home')
         setError(false);
       }
     } catch (err) {
-      setResponseData("");
+      usernameField.current.value = "";
+      passwordField.current.value = "";
       setError("Login Failed");
     }
   }
 
-  function handleSubmission(e) {
-    e.preventDefault();
-    const username = usernameField.current.value;
-    const password = passwordField.current.value;
-    if(!username) setUsernameMissing(true)
-    if(!password) setPasswordMissing(true)
-    if(username && password) {
-      verifyLogin(username, password);
-      setUsernameMissing(false)
-      setPasswordMissing(false)
-    }
-  }
-
-  useEffect(() => {
-    if (error) {
-      usernameField.current.value = "";
-      passwordField.current.value = "";
-    }
-  }, [responseData,error]);
-
   return (
     <form onSubmit={handleSubmission} className={styles.form}>
-      <div>
-        <CiLogin className={styles.image} />
+
+      <div className={styles.headerContainer}>
+        <h2>Login</h2>
       </div>
 
       <div className={styles.container}>
@@ -74,9 +79,10 @@ function Login() {
         </label>
         <input
           ref={usernameField}
+          onBlur={() => handleBlur("username")}
           type="text"
           id="username"
-          className={`${styles.input} ${usernameMissing ? styles.inputError : null}`}
+          className={`${styles.input} ${error || usernameMissing ? styles.inputError : null}`}
         />
       </div>
 
@@ -86,9 +92,10 @@ function Login() {
         </label>
         <input
           ref={passwordField}
+          onBlur={() => handleBlur("password")}
           type="password"
           id="password"
-          className={`${styles.input} ${passwordMissing ? styles.inputError : null}`}
+          className={`${styles.input} ${error || passwordMissing ? styles.inputError : null}`}
         />
       </div>
 
@@ -100,8 +107,10 @@ function Login() {
           Login
         </button>
       </div>
+
     </form>
   );
+
 }
 
 export default Login;

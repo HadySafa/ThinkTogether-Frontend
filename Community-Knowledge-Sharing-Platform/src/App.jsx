@@ -1,11 +1,20 @@
 import { useState } from 'react'
-import Login from './LoginPage'
-import SignUp from './SignupPage'
+import Login from './Forms/Login'
+import SignUp from './Forms/Signup'
+import Homepage from './Homepage'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 function App() {
 
   return (
     <>
-      <SignUp />
+      <Router>
+        <Routes>
+          <Route path="/" element={<SignUp />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Home" element={<Homepage />} />
+        </Routes>
+      </Router>
     </>
   )
 
