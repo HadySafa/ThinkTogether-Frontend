@@ -9,9 +9,10 @@
 }
 
 body{
-  min-height: 100vh;
+  min-height: 150vh;
   background-color: #edf2f4;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: 'Roboto', sans-serif;
 }

@@ -1,0 +1,145 @@
+:root {
+    --color1: #1D4ED8;
+    --color2: #edf2f4;
+}
+
+.header {
+    padding: 1rem 0.5rem;
+    font-size: 1.75rem;
+}
+
+.form {
+    min-width: 90vw;
+    max-width: 90vw;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+}
+
+.form>div:not(:last-child) {
+    min-width: 100%;
+    max-width: 100%;
+    border: 1px solid lightgray;
+}
+
+.title {
+    min-width: 100%;
+    max-width: 100%;
+    background-color: white;
+    padding: 0.5rem;
+    font-size: 1.25rem;
+    border-bottom: 1px solid lightgray;
+}
+
+.titleInput {
+    min-width: 100%;
+    max-width: 100%;
+    background-color: white;
+    padding: 1rem 0.5rem;
+
+}
+
+.descriptionInput {
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 5rem;
+    background-color: white;
+    padding: 1rem 0.5rem;
+}
+
+.titleInput:focus,
+.descriptionInput:focus {
+    outline: 2px solid var(--color1);
+}
+
+.dropdownContainer {
+    background-color: white;
+    min-width: 100%;
+    max-width: 100%;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+    padding: 1rem 0.5rem;
+}
+
+.dropdown {
+    border: 1px solid lightgray;
+    padding: 0.5rem;
+}
+
+.optional {
+    color: gray;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+}
+
+.buttonsContainer {
+    min-width: 100%;
+    max-width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 1rem;
+}
+
+.submit {
+    min-width: 50%;
+    max-width: 50%;
+    min-height: 2rem;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--color1);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+button {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+button:hover {
+    transform: scale(1.05);
+}
+
+.cancel {
+    min-width: 20%;
+    max-width: 20%;
+    min-height: 2rem;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: white;
+    border: 2px solid lightgray;
+    color: var(--color1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cancel:focus {
+    outline: 2px solid var(--color1);
+    border: none;
+}
+
+@media (min-width: 600px) and (max-width: 900px) {
+
+    .form {
+        min-width: 80vw;
+        max-width: 80vw;
+    }
+
+}
+
+@media (min-width: 900px) {
+
+    .form {
+        min-width: 70vw;
+        max-width: 70vw;
+    }
+
+}
