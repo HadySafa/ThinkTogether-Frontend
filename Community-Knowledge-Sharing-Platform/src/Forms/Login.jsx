@@ -1,12 +1,14 @@
 import styles from "./style.module.css";
-import { useState, useRef } from "react";
+import { useState, useRef , useContext } from "react";
 import { useNavigate } from 'react-router-dom';
+import MyContext from "../Context";
 
 function Login() {
 
   const usernameField = useRef(null);
   const passwordField = useRef(null);
   const navigate = useNavigate();
+  const { setToken } = useContext(MyContext);
 
   // form validation
   const [usernameMissing, setUsernameMissing] = useState(null);
@@ -55,7 +57,7 @@ function Login() {
       if (!response.ok) throw new Error("Login Failed");
       const data = await response.json();
       if (data) {
-        sessionStorage.setItem("token", data.token);
+        setToken(data.token)
         navigate('/Home')
         setError(false);
       }

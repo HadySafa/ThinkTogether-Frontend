@@ -1,10 +1,20 @@
 import styles from './style.module.css'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
+import MyContext from '../Context';
 
 function CreatePost() {
 
+    const { id, token } = useContext(MyContext);
     const navigate = useNavigate(null)
+
+    useEffect(() => {
+        if (!token) {
+          navigate('/login');
+        }
+      }, [token]);
+
+
     const form = useRef(null)
     const title = useRef(null)
     const description = useRef(null)
@@ -37,22 +47,22 @@ function CreatePost() {
         let submittedTitle = title.current.value;
         let submittedDescription = description.current.value;
         let submittedCategory = category.current.value;
-        let submittedLink = link.current.value;
-        let submittedCode = code.current.value;
+        let submittedLink = link.current.value ? link.current.value : "";
+        let submittedCode = code.current.value ? code.current.value : "";
 
         const postData = {
-            Title : submittedTitle,
-            Description : submittedDescription,
-            CategoryId : submittedCategory,
-            Link : submittedLink,
-            Code: submittedCode,
-            UserId: 22
+            Title: submittedTitle,
+            Description: submittedDescription,
+            CategoryId: submittedCategory,
+            Link: submittedLink,
+            CodeSnippet: submittedCode,
+            UserId: id
         }
-        
-        if (postData.Title && postData.Description && postData.CategoryId) {
-            addNewPost(postData);
+
+        if (postData.Title && postData.Description && postData.CategoryId && postData.UserId) {
+            let result = addNewPost(postData);
             form.current.reset();
-            navigate("/Home")
+            if(result) navigate("/Home")
         }
     }
     async function addNewPost(formData) {
@@ -68,12 +78,10 @@ function CreatePost() {
             });
             if (!response.ok) throw new Error("Creation Failed");
             const data = await response.json();
-            if (data) {
-                console.log(data)
-            }
+            if(data) return true;
+
         } catch (err) {
-            // warning or error may be occured since snippet or link are null, but it doesnt affect the execution of the code 
-            console.log(err.message);
+            console.log("ERROR HERE: " + err);
         }
     }
 

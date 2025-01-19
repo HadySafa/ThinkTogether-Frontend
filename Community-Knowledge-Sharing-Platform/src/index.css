@@ -9,7 +9,7 @@
 }
 
 body{
-  min-height: 150vh;
+  min-height: 100vh;
   background-color: #edf2f4;
   display: flex;
   justify-content: center;
