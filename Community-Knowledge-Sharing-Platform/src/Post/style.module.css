@@ -1,0 +1,181 @@
+:root {
+    --color1: #1D4ED8;
+    --color2: #edf2f4;
+}
+
+
+.container {
+    min-width: 90vw;
+    max-width: 90vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 1.5rem;
+    background-color: white;
+    padding: 1.5rem 0;
+}
+
+.container>div {
+    min-width: 90%;
+    max-width: 90%;
+}
+
+.row1 {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+    font-weight: normal;
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.row1>div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.75rem;
+    color: lightgray;
+    border-radius: 50%;
+}
+
+.reactionContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reactionContainer:hover {
+    cursor: pointer;
+}
+
+.active {
+    color: var(--color1);
+}
+
+.postTitle {
+    font-size: 1.5rem;
+}
+
+.description {
+    text-align: justify;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+}
+
+.link {
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    gap: 0.5rem;
+}
+
+.link>span {
+    display: flex;
+    align-items: center;
+}
+
+.codeHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid lightgray;
+    padding-left: 20px;
+    margin-bottom: 14px;
+}
+
+.copyButton {
+    background-color: inherit;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.codeBlock {
+    background-color: #2d2d2d;
+    color: white;
+    padding: 14px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.25;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.tags {
+    font-size: 14px;
+}
+
+.commentContainer {
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+.commentContainer::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: lightgray;
+    position: absolute;
+    top: -1.5rem;
+    left: 0;
+}
+
+.commentField {
+    min-width: 100%;
+    max-width: 100%;
+    border: 2px solid #2d2d2d;
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 14px;
+}
+
+.sendIcon {
+    position: absolute;
+    top: 5%;
+    height: 90%;
+    right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+}
+
+
+.firstRow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.subCommentsField {
+    margin-top: 7.5px;
+    padding: 7.5px;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.commentUsername {
+    color: gray;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
