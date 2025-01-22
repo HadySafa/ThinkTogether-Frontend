@@ -2,6 +2,7 @@ import styles from './style.module.css'
 import { useEffect, useRef, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
+import { FaPen } from "react-icons/fa6";
 
 function CreatePost() {
 
@@ -126,7 +127,7 @@ function CreatePost() {
 
         <form ref={form} className={styles.form} method='post' onSubmit={handleSubmission}>
 
-            <h2 className={styles.header}>Create Post </h2>
+            <h2 className={styles.header}><FaPen className={styles.icon}/>Create Post </h2>
 
             <div>
                 <div className={styles.title}>Title <span className={styles.optional}    >(Required)</span></div>

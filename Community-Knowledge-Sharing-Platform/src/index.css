@@ -1,4 +1,9 @@
-*{
+:root {
+  --color1: #1D4ED8;
+  --color2: #edf2f4;
+}
+
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -8,11 +13,31 @@
   outline: 0;
 }
 
-body{
+body {
   min-height: 100vh;
   background-color: #edf2f4;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Roboto', sans-serif;
+}
+
+html::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: var(--color1);
+  border-radius: 15px; 
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--color2); 
+}
+
+@supports (-webkit-appearance: none) {
+  html {
+    -webkit-overflow-scrolling: touch;
+  }
 }

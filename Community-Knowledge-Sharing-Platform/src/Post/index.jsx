@@ -10,10 +10,10 @@ import { FiSend } from "react-icons/fi";
 import { FaArrowCircleDown } from "react-icons/fa";
 import { FaArrowCircleUp } from "react-icons/fa";
 
-function Post() {
+function Post({ postData }) {
 
     // check if user logged in
-    const { token } = useContext(MyContext);
+    const { token, id } = useContext(MyContext);
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
@@ -25,32 +25,24 @@ function Post() {
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
     const [viewComments, setViewComments] = useState(false)
+
+    const currentUserId = id;
+    const [userId, setUserId] = useState(postData.UserId)
+    const [postId, setPostId] = useState(postData.Id)
+    const [comments, setComments] = useState([])
     const comment = useRef()
+
 
     // will be removed, data will be given from parent component, and comments via an api
     const data = {
-        username: "hadysafa__",
-        title: 'The frontend journey',
-        description: `This is the place where the description of the post will be placed. This is the place where the description of the post will be placed. This is the place where the description of the post will be placed.`,
-        link: `https://github.com/hadysafa`,
-        code: `console.log("Welcome to our website!)`,
-        tags: ["Tag1", "Tag2", "Tag3"],
-
+        username: postData.Username,
+        title: postData.Title,
+        description: postData.Description,
+        link: postData.Link,
+        code: postData.CodeSnippet,
     }
-    const comments = [
-        {
-            username: "hadysafa__",
-            comment: "Great work hady!"
-        },
-        {
-            username: "hadysafa__",
-            comment: "Loved It"
-        },
-        {
-            username: "hadysafa__",
-            comment: "Awesome"
-        }
-    ]
+
+    const tags = []
 
     // related to the code block
     function copyToClipboard(code) {
@@ -73,13 +65,96 @@ function Post() {
 
     // make a reaction 
     function handleReaction(reaction) {
-        if (reaction == "Like") {
-            setLiked(true)
-            setDisliked(false)
+            if (reaction == "Like") {
+                setLiked(true)
+                setDisliked(false)
+                addReaction(reaction)
+            }
+            else if(reaction == "DisLike"){
+                setLiked(false)
+                setDisliked(true)
+                addReaction(reaction)
+            }
+    }
+    async function addReaction(reaction) {
+        if (reaction) {
+            const obj = {
+                UserId: currentUserId,
+                PostId: postId,
+                Reaction: reaction
+            }
+            console.log(obj)
+            const url = "http://localhost/SharingPlatform/api.php/Posts/Reactions";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(obj),
+                });
+                if (response.ok){
+                    return true
+                }
+                else{
+                    throw new Error("Creation Failed");
+                }
+
+            } catch (err) {
+                console.log("ERROR HERE: " + err);
+            }
         }
-        else {
-            setLiked(false)
-            setDisliked(true)
+    }
+
+    // function to get comments
+    async function getComments() {
+        const url = "http://localhost/SharingPlatform/api.php/Posts/Comments/" + postId;
+        try {
+            const response = await fetch(url)
+            if (!response.ok) throw new Error("");
+            const data = await response.json()
+            if (data) {
+                setComments(data)
+            }
+        }
+        catch (error) {
+            console.log(error.message)
+        }
+    }
+    useEffect( () => {
+        getComments();
+    },[])
+    
+    // function to add new comment
+    async function addComment() {
+        const submittedComment = comment.current.value;
+        if (submittedComment) {
+            const obj = {
+                UserId: currentUserId,
+                PostId: postId,
+                Comment: submittedComment
+            }
+            console.log(obj)
+            const url = "http://localhost/SharingPlatform/api.php/Posts/Comments";
+            try {
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(obj),
+                });
+                if (response.ok){
+                    getComments();
+                    comment.current.value = ""
+                }
+                else{
+                    throw new Error("Creation Failed");
+                }
+
+            } catch (err) {
+                console.log("ERROR HERE: " + err);
+            }
         }
     }
 
@@ -145,7 +220,7 @@ function Post() {
 
             <div className={styles.commentContainer}>
                 <input type='text' ref={comment} className={styles.commentField} placeholder='Share a comment' />
-                <span className={styles.sendIcon}><FiSend /></span>
+                <span onClick={addComment} className={styles.sendIcon}><FiSend /></span>
             </div>
 
             <div>
@@ -156,7 +231,7 @@ function Post() {
                         <div className={styles.subCommentsField}>
                             {
                                 comments
-                                    ? comments.map((obj, index) => <div className={styles.comment} key={index}><p className={styles.commentUsername}>{obj.username}</p><p>{obj.comment}</p></div>)
+                                    ? comments.map((obj, index) => <div className={styles.comment} key={index}><p className={styles.commentUsername}>{obj.Username}</p><p>{obj.Comment}</p></div>)
                                     : <p>No Comments yet</p>
                             }
                         </div>
