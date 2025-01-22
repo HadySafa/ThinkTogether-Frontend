@@ -10,9 +10,9 @@ function CreatePost() {
 
     useEffect(() => {
         if (!token) {
-          navigate('/login');
+            navigate('/login');
         }
-      }, [token]);
+    }, [token]);
 
 
     const form = useRef(null)
@@ -21,6 +21,7 @@ function CreatePost() {
     const category = useRef(null)
     const link = useRef(null)
     const code = useRef(null)
+    const tags = useRef(null)
 
     // fill dropdown
     const [categories, setCategories] = useState([])
@@ -41,7 +42,7 @@ function CreatePost() {
     useEffect(() => { getAllCategories() }, [])
 
     // handle submission
-    function handleSubmission(e) {
+    async function handleSubmission(e) {
         e.preventDefault();
 
         let submittedTitle = title.current.value;
@@ -49,6 +50,7 @@ function CreatePost() {
         let submittedCategory = category.current.value;
         let submittedLink = link.current.value ? link.current.value : "";
         let submittedCode = code.current.value ? code.current.value : "";
+        let submittedTags = tags.current.value.split(",");
 
         const postData = {
             Title: submittedTitle,
@@ -60,9 +62,16 @@ function CreatePost() {
         }
 
         if (postData.Title && postData.Description && postData.CategoryId && postData.UserId) {
-            let result = addNewPost(postData);
+            let result = await addNewPost(postData);
+            if (result) {
+                
+                for(let i = 0; i < submittedTags.length; i++){
+                    addNewTag(submittedTags[i],result)
+                }
+                
+                navigate("/Home")
+            }
             form.current.reset();
-            if(result) navigate("/Home")
         }
     }
     async function addNewPost(formData) {
@@ -78,12 +87,39 @@ function CreatePost() {
             });
             if (!response.ok) throw new Error("Creation Failed");
             const data = await response.json();
-            if(data) return true;
+            if (data) {
+                return data.postId
+            };
 
         } catch (err) {
             console.log("ERROR HERE: " + err);
         }
     }
+    async function addNewTag(tagName, postId) {
+        const object = {
+            Name: tagName,
+            PostId: postId
+        }
+        const url = "http://localhost/SharingPlatform/api.php/Posts/Tags";
+        try {
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(object),
+            });
+            if (response.ok){
+                return true;
+            }
+            else{
+                throw new Error("Creation Failed")
+            }
+        } catch (err) {
+            console.log("ERROR HERE: " + err);
+        }
+    }
+
 
 
     return (
@@ -109,7 +145,7 @@ function CreatePost() {
                     type='textarea'
                     ref={description}
                     name='Description'
-                    placeholder='Enter your post desccription here'
+                    placeholder='Enter your post description here'
                     className={styles.descriptionInput}
                 ></textarea>
             </div>
@@ -129,6 +165,17 @@ function CreatePost() {
             </div>
 
             <div>
+                <div className={styles.title}>Tags<span className={styles.optional}> (Optional)</span></div>
+                <input
+                    type='text'
+                    ref={tags}
+                    name='Tags'
+                    placeholder='Add tags seperated by a comma ","'
+                    className={styles.titleInput}
+                />
+            </div>
+
+            <div>
                 <div className={styles.title}>Link <span className={styles.optional}>(Optional)</span></div>
                 <input
                     type='text'
@@ -145,7 +192,7 @@ function CreatePost() {
                     type='textarea'
                     ref={code}
                     name='code'
-                    placeholder='Code snippet'
+                    placeholder='Attach a code snippet'
                     className={styles.descriptionInput}
                 ></textarea>
             </div>
@@ -161,4 +208,4 @@ function CreatePost() {
 
 }
 
-export default CreatePost
+export default CreatePost;

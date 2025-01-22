@@ -12,6 +12,7 @@ import { FaArrowCircleUp } from "react-icons/fa";
 
 function Post() {
 
+    // check if user logged in
     const { token } = useContext(MyContext);
     const navigate = useNavigate(null)
     useEffect(() => {
@@ -20,31 +21,30 @@ function Post() {
         }
     }, [token]);
 
-
     const [copied, setCopied] = useState(false)
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
     const [viewComments, setViewComments] = useState(false)
     const comment = useRef()
 
+    // will be removed, data will be given from parent component, and comments via an api
     const data = {
         username: "hadysafa__",
         title: 'The frontend journey',
         description: `This is the place where the description of the post will be placed. This is the place where the description of the post will be placed. This is the place where the description of the post will be placed.`,
         link: `https://github.com/hadysafa`,
-        code: ``,
+        code: `console.log("Welcome to our website!)`,
         tags: ["Tag1", "Tag2", "Tag3"],
 
     }
-
     const comments = [
         {
             username: "hadysafa__",
-            comment: "Awesome"
+            comment: "Great work hady!"
         },
         {
             username: "hadysafa__",
-            comment: "Awesome"
+            comment: "Loved It"
         },
         {
             username: "hadysafa__",
@@ -52,6 +52,7 @@ function Post() {
         }
     ]
 
+    // related to the code block
     function copyToClipboard(code) {
         const content = code;
         navigator.clipboard.writeText(content).then(
@@ -64,6 +65,13 @@ function Post() {
         );
     }
 
+    // show/hide comments field
+    function toggleShowComments() {
+        if (viewComments) setViewComments(false)
+        else setViewComments(true)
+    }
+
+    // make a reaction 
     function handleReaction(reaction) {
         if (reaction == "Like") {
             setLiked(true)
@@ -73,11 +81,6 @@ function Post() {
             setLiked(false)
             setDisliked(true)
         }
-    }
-
-    function toggleShowComments() {
-        if (viewComments) setViewComments(false)
-        else setViewComments(true)
     }
 
 
@@ -106,21 +109,6 @@ function Post() {
             </div>
 
             {
-                data.code
-                    ?
-                    <div className={styles.codeBlock}>
-                        <div className={styles.codeHeader}>
-                            <p>Code</p>
-                            <button className={styles.copyButton} onClick={() => copyToClipboard(data.code)}>{copied ? "Copied" : "Copy"}</button>
-                        </div>
-                        <pre><code>
-                            {data.code}
-                        </code></pre>
-                    </div>
-                    : null
-            }
-
-            {
                 data.link
                     ?
                     <div className={styles.link}>
@@ -140,6 +128,21 @@ function Post() {
                     : null
             }
 
+            {
+                data.code
+                    ?
+                    <div className={styles.codeBlock}>
+                        <div className={styles.codeHeader}>
+                            <p>Code</p>
+                            <button className={styles.copyButton} onClick={() => copyToClipboard(data.code)}>{copied ? "Copied" : "Copy"}</button>
+                        </div>
+                        <pre><code>
+                            {data.code}
+                        </code></pre>
+                    </div>
+                    : null
+            }
+
             <div className={styles.commentContainer}>
                 <input type='text' ref={comment} className={styles.commentField} placeholder='Share a comment' />
                 <span className={styles.sendIcon}><FiSend /></span>
@@ -153,7 +156,7 @@ function Post() {
                         <div className={styles.subCommentsField}>
                             {
                                 comments
-                                    ? comments.map((obj, index) => <div key={index}><p className={styles.commentUsername}>{obj.username}</p><p>{obj.comment}</p></div>)
+                                    ? comments.map((obj, index) => <div className={styles.comment} key={index}><p className={styles.commentUsername}>{obj.username}</p><p>{obj.comment}</p></div>)
                                     : <p>No Comments yet</p>
                             }
                         </div>
