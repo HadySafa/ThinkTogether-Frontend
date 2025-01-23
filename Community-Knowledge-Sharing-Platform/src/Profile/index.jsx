@@ -1,11 +1,10 @@
-//import styles from './style.module.css'
+import styles from './style.module.css'
 import { useEffect, useRef, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import Post from '../Post'
-import styles from './style.module.css'
 
-function Homepage() {
+function Profile() {
 
   const { id, token } = useContext(MyContext);
   const navigate = useNavigate(null)
@@ -16,8 +15,8 @@ function Homepage() {
   }, [token]);
 
   const [posts, setPosts] = useState([])
-  async function getAllPosts() {
-    const url = "http://localhost/SharingPlatform/api.php/Posts";
+  async function getAllPosts(id) {
+    const url = "http://localhost/SharingPlatform/api.php/Posts/" + id;
     try {
       const response = await fetch(url)
       if (!response.ok) throw new Error("");
@@ -31,16 +30,17 @@ function Homepage() {
     }
   }
   useEffect(() => {
-    getAllPosts();
-  }, [])
+    if(id){
+        getAllPosts(id);
+    }
+  }, [id])
 
 
   return (
     <div className={styles.postsContainer}>
       {
         posts
-          ? //posts.map( (obj,index) => {id == obj.UserId ? null : <Post key={index} postData={obj} />})
-          posts.map((obj, index) => <Post key={index} postData={obj} />)
+          ? posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} />)
           : null
       }
     </div>
@@ -48,4 +48,4 @@ function Homepage() {
 
 }
 
-export default Homepage
+export default Profile

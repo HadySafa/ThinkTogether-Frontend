@@ -10,7 +10,7 @@ import { FiSend } from "react-icons/fi";
 import { FaArrowCircleDown } from "react-icons/fa";
 import { FaArrowCircleUp } from "react-icons/fa";
 
-function Post({ postData }) {
+function Post({ postData, forProfile }) {
 
     // check if user logged in
     const { token, id } = useContext(MyContext);
@@ -24,25 +24,23 @@ function Post({ postData }) {
     const [copied, setCopied] = useState(false)
     const [liked, setLiked] = useState(false)
     const [disliked, setDisliked] = useState(false)
+    const [makeReaction, setMakeReaction] = useState(false)
     const [viewComments, setViewComments] = useState(false)
-
+    const [viewReactions, setViewReactions] = useState(false)
     const currentUserId = id;
-    const [userId, setUserId] = useState(postData.UserId)
     const [postId, setPostId] = useState(postData.Id)
     const [comments, setComments] = useState([])
+    const [tags, setTags] = useState([])
+    const [reactions, setReactions] = useState([])
     const comment = useRef()
-
-
-    // will be removed, data will be given from parent component, and comments via an api
     const data = {
         username: postData.Username,
         title: postData.Title,
         description: postData.Description,
         link: postData.Link,
         code: postData.CodeSnippet,
+        category: postData.CategoryName
     }
-
-    const tags = []
 
     // related to the code block
     function copyToClipboard(code) {
@@ -57,24 +55,84 @@ function Post({ postData }) {
         );
     }
 
-    // show/hide comments field
+    // function to get reaction
+    async function getReaction() {
+        const url = "http://localhost/SharingPlatform/api.php/Posts/Reactions/" + postId;
+        try {
+            const response = await fetch(url)
+            if (!response.ok) throw new Error("");
+            const data = await response.json()
+            if (data) {
+                setReactions(data)
+            }
+        }
+        catch (error) {
+            console.log(error.message)
+        }
+    }
+    useEffect(() => {
+        getReaction();
+    }, [makeReaction])
+    useEffect(() => {
+        reactions.filter((reaction) => {
+            if (currentUserId == reaction.UserId) {
+                if (reaction.Reaction == "Like") {
+                    setLiked(true)
+                    setDisliked(false)
+                }
+                else if (reaction.Reaction == "Dislike") {
+                    setLiked(false)
+                    setDisliked(true)
+                }
+            }
+        })
+    }, [reactions])
+
+    // function to get tags
+    async function getTags() {
+        const url = "http://localhost/SharingPlatform/api.php/Posts/Tags/" + postId;
+        try {
+            const response = await fetch(url)
+            if (!response.ok) throw new Error("");
+            const data = await response.json()
+            if (data) {
+                setTags(data)
+            }
+        }
+        catch (error) {
+            console.log(error.message)
+        }
+    }
+    useEffect(() => {
+        getTags();
+    }, [])
+
+    // show/hide comments / reactions field
     function toggleShowComments() {
         if (viewComments) setViewComments(false)
-        else setViewComments(true)
+        else {
+            setViewComments(true)
+            setViewReactions(false)
+        }
+    }
+    function toggleShowReactions() {
+        if (viewReactions) setViewReactions(false)
+        else {
+            setViewComments(false)
+            setViewReactions(true)
+        }
     }
 
     // make a reaction 
     function handleReaction(reaction) {
-            if (reaction == "Like") {
-                setLiked(true)
-                setDisliked(false)
-                addReaction(reaction)
-            }
-            else if(reaction == "DisLike"){
-                setLiked(false)
-                setDisliked(true)
-                addReaction(reaction)
-            }
+        if (reaction == "Like" && !liked) {
+            setMakeReaction(false)
+            addReaction(reaction)
+        }
+        else if (reaction == "Dislike" && !disliked) {
+            setMakeReaction(false)
+            addReaction(reaction)
+        }
     }
     async function addReaction(reaction) {
         if (reaction) {
@@ -83,7 +141,6 @@ function Post({ postData }) {
                 PostId: postId,
                 Reaction: reaction
             }
-            console.log(obj)
             const url = "http://localhost/SharingPlatform/api.php/Posts/Reactions";
             try {
                 const response = await fetch(url, {
@@ -93,10 +150,11 @@ function Post({ postData }) {
                     },
                     body: JSON.stringify(obj),
                 });
-                if (response.ok){
+                if (response.ok) {
+                    setMakeReaction(true)
                     return true
                 }
-                else{
+                else {
                     throw new Error("Creation Failed");
                 }
 
@@ -121,10 +179,10 @@ function Post({ postData }) {
             console.log(error.message)
         }
     }
-    useEffect( () => {
+    useEffect(() => {
         getComments();
-    },[])
-    
+    }, [])
+
     // function to add new comment
     async function addComment() {
         const submittedComment = comment.current.value;
@@ -144,11 +202,11 @@ function Post({ postData }) {
                     },
                     body: JSON.stringify(obj),
                 });
-                if (response.ok){
+                if (response.ok) {
                     getComments();
                     comment.current.value = ""
                 }
-                else{
+                else {
                     throw new Error("Creation Failed");
                 }
 
@@ -157,7 +215,6 @@ function Post({ postData }) {
             }
         }
     }
-
 
     return (
         <div className={styles.container}>
@@ -174,7 +231,7 @@ function Post({ postData }) {
             </div>
 
             <div>
-                <h2 className={styles.postTitle}>{data.title}</h2>
+                <h2 className={styles.postTitle}>{data.category}: {data.title}</h2>
             </div>
 
             <div>
@@ -194,10 +251,10 @@ function Post({ postData }) {
             }
 
             {
-                data.tags
+                tags
                     ? <div className={styles.tags}>
                         {
-                            data.tags.map((tag, index) => <span key={index}>#{tag} </span>)
+                            tags.map((tag, index) => <span key={index}>#{tag.Name} </span>)
                         }
                     </div>
                     : null
@@ -218,10 +275,14 @@ function Post({ postData }) {
                     : null
             }
 
-            <div className={styles.commentContainer}>
-                <input type='text' ref={comment} className={styles.commentField} placeholder='Share a comment' />
-                <span onClick={addComment} className={styles.sendIcon}><FiSend /></span>
-            </div>
+            {
+                forProfile
+                    ? null
+                    : <div className={styles.commentContainer}>
+                        <input type='text' ref={comment} className={styles.commentField} placeholder='Share a comment' />
+                        <span onClick={addComment} className={styles.sendIcon}><FiSend /></span>
+                    </div>
+            }
 
             <div>
                 <div onClick={toggleShowComments} className={styles.firstRow}>{viewComments ? "Hide Comments" : "View Comments"} {viewComments ? <FaArrowCircleUp /> : <FaArrowCircleDown />}</div>
@@ -235,6 +296,26 @@ function Post({ postData }) {
                                     : <p>No Comments yet</p>
                             }
                         </div>
+                        : null
+                }
+                {
+                    forProfile
+                        ?
+                        <>
+                            <div onClick={toggleShowReactions} className={`${styles.firstRow} ${styles.showReactionContainer}`}>{viewReactions ? "Hide Reactions" : "View Reactions"} {viewReactions ? <FaArrowCircleUp /> : <FaArrowCircleDown />}</div>
+                            {
+                                viewReactions
+                                    ?
+                                    <div className={styles.subCommentsField}>
+                                        {
+                                            reactions
+                                                ? reactions.map((obj, index) => <div className={styles.comment} key={index}><p><span className={styles.commentUsername}>{obj.Username}</span> {obj.Reaction}d your post.</p></div>)
+                                                : <p>No reactions yet</p>
+                                        }
+                                    </div>
+                                    : null
+                            }
+                        </>
                         : null
                 }
             </div>
