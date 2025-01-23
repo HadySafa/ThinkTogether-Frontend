@@ -36,13 +36,18 @@ function Homepage() {
 
 
   return (
-    <div className={styles.postsContainer}>
-      {
-        posts
-          ? //posts.map( (obj,index) => {id == obj.UserId ? null : <Post key={index} postData={obj} />})
-          posts.map((obj, index) => <Post key={index} postData={obj} />)
-          : null
-      }
+    <div className={styles.mainContainer}>
+      <div className={styles.firstContainer}>
+            <p>Some other content</p>
+      </div>
+      <div className={styles.postsContainer}>
+        {
+          posts
+            ? //posts.map( (obj,index) => {id == obj.UserId ? null : <Post key={index} postData={obj} />})
+            posts.map((obj, index) => <Post key={index} postData={obj} />)
+            : null
+        }
+      </div>
     </div>
   );
 

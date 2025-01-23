@@ -15,6 +15,7 @@ function Profile() {
   }, [token]);
 
   const [posts, setPosts] = useState([])
+  const [refresh,setRefresh] = useState(true)
   async function getAllPosts(id) {
     const url = "http://localhost/SharingPlatform/api.php/Posts/" + id;
     try {
@@ -30,17 +31,17 @@ function Profile() {
     }
   }
   useEffect(() => {
-    if(id){
+    if(id && refresh){
         getAllPosts(id);
     }
-  }, [id])
+  }, [id,refresh])
 
 
   return (
     <div className={styles.postsContainer}>
       {
         posts
-          ? posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} />)
+          ? posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} setRefresh={setRefresh} />)
           : null
       }
     </div>

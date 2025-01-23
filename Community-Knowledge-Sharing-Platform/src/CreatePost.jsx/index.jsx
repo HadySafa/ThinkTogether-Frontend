@@ -67,7 +67,9 @@ function CreatePost() {
             if (result) {
                 
                 for(let i = 0; i < submittedTags.length; i++){
-                    addNewTag(submittedTags[i],result)
+                    if(submittedTags[i]){
+                        addNewTag(submittedTags[i],result)
+                    }
                 }
                 
                 navigate("/Home")

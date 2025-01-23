@@ -9,8 +9,10 @@ import { IoMdLink } from "react-icons/io";
 import { FiSend } from "react-icons/fi";
 import { FaArrowCircleDown } from "react-icons/fa";
 import { FaArrowCircleUp } from "react-icons/fa";
+import { FaPen } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
 
-function Post({ postData, forProfile }) {
+function Post({ postData, forProfile, setRefresh }) {
 
     // check if user logged in
     const { token, id } = useContext(MyContext);
@@ -216,6 +218,35 @@ function Post({ postData, forProfile }) {
         }
     }
 
+    // profile methods
+    async function handleDelete() {
+        const url = "http://localhost/SharingPlatform/api.php/Posts/" + postId;
+        console.log(url)
+        try {
+            setRefresh(false)
+            const response = await fetch(url, {
+                method: "DELETE"
+            });
+            if (!response.ok) throw new Error("");
+            setRefresh(true)
+        }
+        catch (error) {
+            console.log(error.message)
+        }
+    }
+
+    function handleEdit() {
+        const data = {
+            PostID: postId,
+            PostTitle: postData.Title,
+            PostDescription: postData.Description,
+            PostLink: postData.Link,
+            PostCode: postData.CodeSnippet
+        }
+        navigate('/editpost', { state: data });
+    }
+
+
     return (
         <div className={styles.container}>
 
@@ -225,8 +256,17 @@ function Post({ postData, forProfile }) {
                     <div><h4>{data.username}</h4></div>
                 </div>
                 <div>
-                    <div className={styles.reactionContainer}>< SlLike className={`${liked ? styles.active : null}`} onClick={() => handleReaction("Like")} /></div>
-                    <div className={styles.reactionContainer}>< SlDislike className={`${disliked ? styles.active : null}`} onClick={() => handleReaction("Dislike")} /></div>
+                    {
+                        !forProfile
+                            ? <>
+                                <div className={styles.reactionContainer}>< SlLike className={`${liked ? styles.active : null}`} onClick={() => handleReaction("Like")} /></div>
+                                <div className={styles.reactionContainer}>< SlDislike className={`${disliked ? styles.active : null}`} onClick={() => handleReaction("Dislike")} /></div>
+                            </>
+                            : <>
+                                <div className={styles.reactionContainer}>< FaPen onClick={handleEdit}/></div>
+                                <div className={styles.reactionContainer}>< MdDelete className={styles.icon} onClick={handleDelete} /></div>
+                            </>
+                    }
                 </div>
             </div>
 
@@ -251,7 +291,7 @@ function Post({ postData, forProfile }) {
             }
 
             {
-                tags
+                tags && tags.length > 0
                     ? <div className={styles.tags}>
                         {
                             tags.map((tag, index) => <span key={index}>#{tag.Name} </span>)

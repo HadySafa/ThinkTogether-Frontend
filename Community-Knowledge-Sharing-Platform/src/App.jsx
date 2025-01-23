@@ -4,6 +4,7 @@ import Homepage from './Homepage'
 import CreatePost from './CreatePost.jsx'
 import Post from './Post/index.jsx'
 import Profile from './Profile'
+import EditPost from './EditPost/index.jsx' 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/NewPost" element={<CreatePost />} />
           <Route path="/Post" element={<Post />} />
           <Route path="/Profile" element={<Profile />} />
+          <Route path="/EditPost" element={<EditPost />} />
         </Routes>
       </Router>
     </>
