@@ -5,12 +5,12 @@
 
 
 .container {
-    min-width: 90%;
-    max-width: 90%;
+    min-width: 100%;
+    max-width: 100%;
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
     background-color: white;
     padding: 1.5rem 0;
 }
@@ -26,7 +26,7 @@
     font-size: 1rem;
     font-weight: normal;
     position: relative;
-    margin-bottom: 0.75rem;
+    
 }
 
 .row1>div {
@@ -60,7 +60,8 @@
 }
 
 .postTitle {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
+    font-weight: bolder;
 }
 
 .description {
@@ -104,11 +105,10 @@
 .codeBlock {
     background-color: #2d2d2d;
     color: white;
-    padding: 14px;
+    padding: 10px;
     border-radius: 5px;
     font-family: 'Courier New', monospace;
     font-size: 14px;
-    line-height: 1.25;
     overflow: auto;
     white-space: pre-wrap;
     word-wrap: break-word;
@@ -141,7 +141,7 @@
     max-width: 100%;
     border: 2px solid #2d2d2d;
     border-radius: 5px;
-    padding: 12px;
+    padding: 10px;
     font-size: 14px;
 }
 

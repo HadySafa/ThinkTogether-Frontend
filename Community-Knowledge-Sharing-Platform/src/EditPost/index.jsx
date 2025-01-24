@@ -15,7 +15,7 @@ function EditPost() {
         if (!token) {
             navigate('/login');
         }
-        if(!data){
+        if (!data) {
             navigate('/profile');
         }
     }, [token]);
@@ -26,11 +26,11 @@ function EditPost() {
     const link = useRef(null)
     const code = useRef(null)
     useEffect(() => {
-        if(data){
+        if (data) {
             title.current.value = data.PostTitle;
-        description.current.value = data.PostDescription;
-        link.current.value = data.PostLink;
-        code.current.value = data.PostCode;
+            description.current.value = data.PostDescription;
+            link.current.value = data.PostLink;
+            code.current.value = data.PostCode;
         }
     }, [data])
 

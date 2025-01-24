@@ -3,6 +3,7 @@ import { useEffect, useRef, useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import Post from '../Post'
+import Header from '../Header'
 
 function Profile() {
 
@@ -15,7 +16,7 @@ function Profile() {
   }, [token]);
 
   const [posts, setPosts] = useState([])
-  const [refresh,setRefresh] = useState(true)
+  const [refresh, setRefresh] = useState(true)
   async function getAllPosts(id) {
     const url = "http://localhost/SharingPlatform/api.php/Posts/" + id;
     try {
@@ -31,20 +32,23 @@ function Profile() {
     }
   }
   useEffect(() => {
-    if(id && refresh){
-        getAllPosts(id);
+    if (id && refresh) {
+      getAllPosts(id);
     }
-  }, [id,refresh])
+  }, [id, refresh])
 
 
   return (
-    <div className={styles.postsContainer}>
-      {
-        posts
-          ? posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} setRefresh={setRefresh} />)
-          : null
-      }
-    </div>
+    <>
+      <Header />
+      <div className={styles.postsContainer}>
+        {
+          posts
+            ? posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} setRefresh={setRefresh} />)
+            : null
+        }
+      </div>
+    </>
   );
 
 }

@@ -15,13 +15,8 @@ import { MdDelete } from "react-icons/md";
 function Post({ postData, forProfile, setRefresh }) {
 
     // check if user logged in
-    const { token, id } = useContext(MyContext);
+    const { id } = useContext(MyContext);
     const navigate = useNavigate(null)
-    useEffect(() => {
-        if (!token) {
-            navigate('/login');
-        }
-    }, [token]);
 
     const [copied, setCopied] = useState(false)
     const [liked, setLiked] = useState(false)
@@ -245,7 +240,6 @@ function Post({ postData, forProfile, setRefresh }) {
         }
         navigate('/editpost', { state: data });
     }
-
 
     return (
         <div className={styles.container}>
