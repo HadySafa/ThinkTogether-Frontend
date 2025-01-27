@@ -58,7 +58,7 @@ function Login() {
       const data = await response.json();
       if (data) {
         setToken(data.token)
-        navigate('/Home')
+        navigate('/Homepage')
         setError(false);
       }
     } catch (err) {

@@ -103,3 +103,7 @@
     cursor: pointer;
     transform: scale(1.25);
 }
+
+.active{
+    color: var(--color1);
+}

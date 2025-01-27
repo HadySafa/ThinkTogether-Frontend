@@ -1,6 +1,6 @@
 import styles from "./style.module.css";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function SignUp() {
 
@@ -43,6 +43,10 @@ function SignUp() {
     else setUsernameError('');
   }
 
+
+  const location = useLocation();
+  const { manager } = location.state || {};
+
   // password and confrim password validation
   const [passwordError, setPasswordError] = useState('');
   function handlePasswordBlur(e) {
@@ -79,7 +83,7 @@ function SignUp() {
     PhoneNumber: '',
     Password: '',
     ConfirmedPassword: '',
-    Role: 'User'
+    Role: manager ? "Manager" : "User"
   });
   function handleChange(e) {
     const { name, value } = e.target;
@@ -98,7 +102,7 @@ function SignUp() {
         PhoneNumber: '',
         Password: '',
         ConfirmedPassword: '',
-        Role: 'User'
+        Role: "User"
       });
     }
     else {
@@ -121,7 +125,12 @@ function SignUp() {
       const data = await response.json();
       if (data) {
         console.log("REACHED")
-        navigate("/Login")
+        if(manager){
+          navigate("/Homepage")
+        }
+        else{
+          navigate("/Login")
+        }
         setError(false);
       }
     } catch (err) {

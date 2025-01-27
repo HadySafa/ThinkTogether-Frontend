@@ -126,7 +126,7 @@ function CreatePost() {
     return (
 
         <>
-            <Header />
+            <Header makePostActive={true} />
             <form ref={form} className={styles.form} method='post' onSubmit={handleSubmission}>
 
                 <h2 className={styles.header}><FaPen className={styles.icon} />Create Post </h2>

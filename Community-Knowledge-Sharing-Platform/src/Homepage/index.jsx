@@ -46,7 +46,7 @@ function Homepage() {
 
   return (
     <>
-      <Header />
+      <Header homeActive={true} />
       <div className={styles.mainContainer}>
 
         <div className={styles.firstContainer}>

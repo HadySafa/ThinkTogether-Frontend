@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import logo from '../assets/logo.png'
 
-function Header() {
+function Header({homeActive,profileActive,makePostActive,searchActive}) {
 
     const navigate = useNavigate(null)
     const { setToken } = useContext(MyContext);
@@ -69,10 +69,10 @@ function Header() {
                     !isWideScreen
                     ? <div className={styles.icons}>{showNav ? <IoClose onClick={toggleNav} /> : <RxHamburgerMenu onClick={toggleNav} />}</div>
                     : <nav className={styles.horizantalNav}>
-                            <div title='Home' onClick={handleHome}><IoHomeSharp /></div>
-                            <div title='Search'><FaSearch /></div>
-                            <div title='New post' onClick={handleNewPost}><FaPen /></div>
-                            <div title='Profile' onClick={handleProfile}><FaUser /></div>
+                            <div className={homeActive ? styles.active : null} title='Home' onClick={handleHome}><IoHomeSharp /></div>
+                            <div className={searchActive ? styles.active : null} title='Search'><FaSearch /></div>
+                            <div className={makePostActive ? styles.active : null} title='New post' onClick={handleNewPost}><FaPen /></div>
+                            <div className={profileActive ? styles.active : null} title='Profile' onClick={handleProfile}><FaUser /></div>
                             <div className={styles.button} onClick={handleLogout}>Logout</div>
                       </nav>
                 }

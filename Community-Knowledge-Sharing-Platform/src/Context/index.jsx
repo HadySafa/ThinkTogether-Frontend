@@ -11,6 +11,8 @@ export const MyProvider = ({ children }) => {
   const [id, setId] = useState(null)
   const [fullName, setFullName] = useState("")
   const [username, setUsername] = useState("")
+  const [number,setNumber] = useState("")
+  //const [refresh,setRefresh] = useState(false)
   
 
   useEffect(() => {
@@ -29,6 +31,7 @@ export const MyProvider = ({ children }) => {
         setId(decodedToken.Id);
         setFullName(decodedToken.FullName)
         setUsername(decodedToken.Username)
+        setNumber(decodedToken.PhoneNumber)
       }
 
     }
@@ -36,7 +39,7 @@ export const MyProvider = ({ children }) => {
   }, [token])
 
   return (
-    <MyContext.Provider value={{ setToken, id, token, role, fullName, username}}>
+    <MyContext.Provider value={{ setToken, id, token, role, fullName, username, number}}>
       {children}
     </MyContext.Provider>
   );
