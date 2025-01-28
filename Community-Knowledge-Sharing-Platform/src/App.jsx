@@ -6,6 +6,7 @@ import Profile from './Profile'
 import EditPost from './EditPost/index.jsx'
 import ChangePassword from './Profile/ChangePassword.jsx'
 import UpdateInfo from './Profile/UpdateInfo.jsx'
+import Search from './Search/index.jsx'
 import ManageCategories from './Profile/ManageCategories.jsx'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="/UpdateInfo" element={<UpdateInfo />} />
           <Route path="/ChangePassword" element={<ChangePassword />} />
           <Route path="/ManageCategories" element={<ManageCategories />} />
+          <Route path="/Search" element={<Search />} />
         </Routes>
       </Router>
     </>
