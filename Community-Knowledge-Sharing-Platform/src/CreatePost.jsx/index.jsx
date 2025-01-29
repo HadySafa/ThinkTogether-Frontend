@@ -72,7 +72,7 @@ function CreatePost() {
                     }
                 }
 
-                navigate("/Home")
+                navigate("/Homepage")
             }
             form.current.reset();
         }
@@ -129,7 +129,7 @@ function CreatePost() {
             <Header makePostActive={true} />
             <form ref={form} className={styles.form} method='post' onSubmit={handleSubmission}>
 
-                <h2 className={styles.header}><FaPen className={styles.icon} />Create Post </h2>
+                <h2 className={styles.header}><p>Create Post</p><FaPen className={styles.icon} /></h2>
 
                 <div>
                     <div className={styles.title}>Title <span className={styles.optional}    >(Required)</span></div>

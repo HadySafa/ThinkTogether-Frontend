@@ -4,8 +4,13 @@
 }
 
 .header {
-    padding: 1rem 0.5rem;
     font-size: 1.75rem;
+    border-bottom:1px solid lightgray;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .icon{
@@ -14,7 +19,7 @@
 }
 
 .form {
-    margin-top: 5rem;
+    margin-top: 6rem;
     margin-bottom: 1rem;
     min-width: 80vw;
     max-width: 80vw;
@@ -85,7 +90,6 @@
 .buttonsContainer {
     min-width: 100%;
     max-width: 100%;
-    padding: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: end;

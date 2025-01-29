@@ -15,19 +15,21 @@ function Search() {
         setError("")
         e.preventDefault();
         const searchParameter = searchInputField.current.value;
-        const url = "http://localhost/SharingPlatform/api.php/Posts/Search/" + searchParameter;
-        try {
-            const response = await fetch(url)
-            if (!response.ok) throw new Error("Response Failed");
-            const data = await response.json()
-            if (data) {
-                setPosts(data)
+        if (searchParameter) {
+            const url = "http://localhost/SharingPlatform/api.php/Posts/Search/" + searchParameter;
+            try {
+                const response = await fetch(url)
+                if (!response.ok) throw new Error("Response Failed");
+                const data = await response.json()
+                if (data) {
+                    setPosts(data)
+                }
             }
-        }
-        catch (error) {
-            setPosts([])
-            console.log(error.message)
-            setError("No search results found for " + searchParameter)
+            catch (error) {
+                setPosts([])
+                console.log(error.message)
+                setError("No search results found for " + searchParameter)
+            }
         }
     }
 
@@ -36,7 +38,7 @@ function Search() {
             <Header searchActive={true} />
             <section className={styles.mainContainer}>
 
-                <h2><p>Search In Posts</p><IoMdSearch /></h2>
+                <h2><p>Search In Tags</p><IoMdSearch /></h2>
 
                 <div className={styles.subContainer}>
                     <form className={styles.searchContainer} onSubmit={handleSubmit}>

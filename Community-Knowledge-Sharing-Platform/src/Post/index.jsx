@@ -36,7 +36,8 @@ function Post({ postData, forProfile, setRefresh }) {
         description: postData.Description,
         link: postData.Link,
         code: postData.CodeSnippet,
-        category: postData.CategoryName
+        category: postData.CategoryName,
+        likes: postData?.LikeCount 
     }
 
     // related to the code block
@@ -253,7 +254,7 @@ function Post({ postData, forProfile, setRefresh }) {
                     {
                         !forProfile
                             ? <>
-                                <div className={styles.reactionContainer}>< SlLike className={`${liked ? styles.active : null}`} onClick={() => handleReaction("Like")} /></div>
+                                <div className={styles.reactionContainer}>{data?.likes}< SlLike className={`${liked ? styles.active : null}`} onClick={() => handleReaction("Like")} /></div>
                                 <div className={styles.reactionContainer}>< SlDislike className={`${disliked ? styles.active : null}`} onClick={() => handleReaction("Dislike")} /></div>
                             </>
                             : <>
@@ -325,9 +326,9 @@ function Post({ postData, forProfile, setRefresh }) {
                         ?
                         <div className={styles.subCommentsField}>
                             {
-                                comments
+                                comments && comments.length > 0
                                     ? comments.map((obj, index) => <div className={styles.comment} key={index}><p className={styles.commentUsername}>{obj.Username}</p><p>{obj.Comment}</p></div>)
-                                    : <p>No Comments yet</p>
+                                    : <p className={styles.redHighlight}>No Comments yet</p>
                             }
                         </div>
                         : null
@@ -342,9 +343,9 @@ function Post({ postData, forProfile, setRefresh }) {
                                     ?
                                     <div className={styles.subCommentsField}>
                                         {
-                                            reactions
+                                            reactions && reactions.length > 0
                                                 ? reactions.map((obj, index) => <div className={styles.comment} key={index}><p><span className={styles.commentUsername}>{obj.Username}</span> {obj.Reaction}d your post.</p></div>)
-                                                : <p>No reactions yet</p>
+                                                : <p className={styles.redHighlight}>No reactions yet</p>
                                         }
                                     </div>
                                     : null

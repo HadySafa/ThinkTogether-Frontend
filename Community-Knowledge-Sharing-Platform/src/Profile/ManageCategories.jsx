@@ -1,8 +1,21 @@
 import { MdManageAccounts } from "react-icons/md";
 import styles from './style.module.css'
-import { useState, useRef, useEffect } from "react";
+import MyContext from "../Context";
+import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect, useContext } from "react";
 
 function ManageCategories() {
+
+    const { token, id, username ,role} = useContext(MyContext);
+    const navigate = useNavigate(null)
+    useEffect(() => {
+        if (!token) {
+            navigate('/login');
+        }
+        else if(role != "Manager"){
+            navigate('/Profile');
+        }
+    }, [token,role]);
 
     // fill dropdown
     const [refresh, setRefresh] = useState(true)

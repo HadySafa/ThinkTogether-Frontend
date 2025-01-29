@@ -12,8 +12,7 @@ export const MyProvider = ({ children }) => {
   const [fullName, setFullName] = useState("")
   const [username, setUsername] = useState("")
   const [number,setNumber] = useState("")
-  //const [refresh,setRefresh] = useState(false)
-  
+
 
   useEffect(() => {
 

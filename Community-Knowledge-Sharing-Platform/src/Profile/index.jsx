@@ -108,7 +108,6 @@ function Profile() {
           <section className={styles.actionButtonsContainer}>
             <button onClick={updateInfo}>Update Personal Info</button>
             <button onClick={changePassword}>Change Password</button>
-            <button onClick={viewPosts}>View Shared Posts</button>
             {
               role == "Manager"
                 ? <>
@@ -120,19 +119,19 @@ function Profile() {
           </section>
         </div>
 
-        {
-          posts && posts.length > 0
-            ?
-            <section ref={postsDiv} className={styles.postsMainContainer}>
-              <h2><p>Shared Posts</p><FaRegShareFromSquare /></h2>
-              <div className={styles.postsContainer}>
-                {
-                  posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} setRefresh={setRefresh} />)
-                }
-              </div>
-            </section>
-            : null
-        }
+
+        <section ref={postsDiv} className={styles.postsMainContainer}>
+          <h2><p>Shared Posts</p><FaRegShareFromSquare /></h2>
+          <div className={styles.postsContainer}>
+            {
+              posts && posts.length > 0
+                ?
+                posts.map((obj, index) => <Post key={index} postData={obj} forProfile={true} setRefresh={setRefresh} />)
+                : "No Posts Yet"
+            }
+          </div>
+        </section>
+
 
       </div>
     </>
