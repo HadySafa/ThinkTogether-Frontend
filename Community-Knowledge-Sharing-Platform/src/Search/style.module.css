@@ -3,21 +3,21 @@
     --color2: #edf2f4;
 }
 
-.mainContainer {
-    border: 2px solid red;
+.mainContainer {    
     min-height: 100vh;
     margin-top: 6rem;
+    margin-bottom: 2rem;
     min-width: 80vw;
     max-width: 80vw;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 3rem;
 }
 
 .subContainer{
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 3rem;
 }
 
 .mainContainer>h2 {
@@ -26,6 +26,7 @@
     align-items: center;
     font-size: 1.5rem;
     gap: 1rem;
+    border-bottom:  2px solid grey;
 }
 
 .searchContainer {
@@ -36,13 +37,10 @@
 }
 
 .input {
-    border: 2px solid lightgray;
-    padding: 0.5rem;
+    padding: 8px;
     border-radius: 5px;
     min-width: 68%;
     max-width: 68%;
-    min-height: 2.5rem;
-    max-height: 2.5rem;
 }
 
 .input:focus{
@@ -52,16 +50,17 @@
 .button {
     color: var(--color2);
     background-color: var(--color1);
-    padding: 0.5rem;
+    padding: 6px;
     border-radius: 5px;
     min-width: 30%;
     max-width: 30%;
-    min-height: 2.5rem;
-    max-height: 2.5rem;
+
 }
 
 .postsContainer {
-    border: 2px solid blue;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 

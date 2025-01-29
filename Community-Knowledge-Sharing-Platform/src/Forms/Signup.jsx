@@ -8,37 +8,23 @@ function SignUp() {
 
   // username validation
   const [usernameError, setUsernameError] = useState('');
-  async function getAllUsernames() {
-    const url = "http://localhost/SharingPlatform/api.php/Users";
+  async function checkUserAvailable(username) {
+    const url = "http://localhost/SharingPlatform/api.php/Users/CheckUser/" + username;
     try {
       const response = await fetch(url)
       if (!response.ok) throw new Error("");
-      const data = await response.json()
-      let users = []
-      if (data) {
-        for (let i = 0; i < data.length; i++) {
-          users.push(data[i].Username)
-        }
-        return users
-      }
+      return true
     }
     catch (error) {
-      setError(error.message)
+      return false
     }
   }
   async function handleUsernameBlur(e) {
-    const usernames = await getAllUsernames();
-    let submittedUsername = e.target.value;
-    let availableUsername = true;
-    if (submittedUsername && submittedUsername.length > 0) {
-      for (let i = 0; i < usernames.length; i++) {
-        if (submittedUsername === usernames[i]) availableUsername = false
-      }
-      if (!availableUsername) {
-        setUsernameError("Username not available, try another one.")
-        e.target.value = ""
-      }
-      else setUsernameError('');
+    const username = e.target.value;
+    let usernameAvailable = await checkUserAvailable(username)
+    if (usernameAvailable) {
+      setUsernameError("Username not available, try another one.")
+      e.target.value = ""
     }
     else setUsernameError('');
   }
@@ -125,10 +111,10 @@ function SignUp() {
       const data = await response.json();
       if (data) {
         console.log("REACHED")
-        if(manager){
+        if (manager) {
           navigate("/Homepage")
         }
-        else{
+        else {
           navigate("/Login")
         }
         setError(false);
@@ -239,7 +225,7 @@ function SignUp() {
       </div>
 
       {
-        missingField ? <div style={{ color: 'red', textAlign:"start" }}>All fields are required</div> : null
+        missingField ? <div style={{ color: 'red', textAlign: "start" }}>All fields are required</div> : null
       }
 
       <div className={styles.buttonsContainer}>

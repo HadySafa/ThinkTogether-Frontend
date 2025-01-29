@@ -39,6 +39,9 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
         setToken("")
         navigate("/Login")
     }
+    function handleSearch(){
+        navigate("/Search")
+    }
 
     // handle screen resize for layout purposes
     const [isWideScreen, setIsWideScreen] = useState(window.innerWidth > 900);
@@ -70,7 +73,7 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
                     ? <div className={styles.icons}>{showNav ? <IoClose onClick={toggleNav} /> : <RxHamburgerMenu onClick={toggleNav} />}</div>
                     : <nav className={styles.horizantalNav}>
                             <div className={homeActive ? styles.active : null} title='Home' onClick={handleHome}><IoHomeSharp /></div>
-                            <div className={searchActive ? styles.active : null} title='Search'><FaSearch /></div>
+                            <div className={searchActive ? styles.active : null} onClick={handleSearch} title='Search'><FaSearch /></div>
                             <div className={makePostActive ? styles.active : null} title='New post' onClick={handleNewPost}><FaPen /></div>
                             <div className={profileActive ? styles.active : null} title='Profile' onClick={handleProfile}><FaUser /></div>
                             <div className={styles.button} onClick={handleLogout}>Logout</div>
@@ -80,7 +83,7 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
 
             <nav className={`${styles.nav} ${showNav ? styles.visibile : null}`}>
                 <div onClick={handleHome}><IoHomeSharp /><span>Home</span></div>
-                <div><FaSearch /><p>Search</p></div>
+                <div onClick={handleSearch}><FaSearch /><p>Search</p></div>
                 <div onClick={handleNewPost}><FaPen /><span>New Post</span></div>
                 <div onClick={handleProfile}><FaUser /><span>Profile</span></div>
                 <div onClick={handleLogout}><TbLogout2 /><span>Logout</span></div>
