@@ -10,7 +10,7 @@ function ChangePassword() {
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
-            navigate('/login');
+            navigate('/');
         }
     }, [token]);
 
@@ -68,7 +68,7 @@ function ChangePassword() {
                 return false
             }
         } catch (err) {
-            console.log("error occured " + err.message)
+            // handle error
         }
     }
 
@@ -110,15 +110,12 @@ function ChangePassword() {
                     body: JSON.stringify(requestData),
                 });
                 if (!response.ok) throw new Error("Edit Failed");
-                navigate("/Login")
+                navigate("/")
             } catch (err) {
-                console.log("ERROR HERE: " + err);
+                // handle error
             }
         }
     }
-
-
-
     
     return (
         <section className={styles.changePassContainer}>

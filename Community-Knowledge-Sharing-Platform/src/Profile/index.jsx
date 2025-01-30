@@ -12,7 +12,7 @@ function Profile() {
   const navigate = useNavigate(null)
   useEffect(() => {
     if (!token) {
-      navigate('/login');
+      navigate('/');
     }
   }, [token]);
 
@@ -64,7 +64,7 @@ function Profile() {
 
   // add manager
   function handleAddManager() {
-    navigate('/', { state: { manager: true } });
+    navigate('/SignUp', { state: { manager: true } });
   }
 
   // manage categories
@@ -72,14 +72,12 @@ function Profile() {
     navigate("/ManageCategories")
   }
 
-
-
   return (
     <>
       <Header profileActive={true} />
-      <div className={styles.mainContainer}>
+      <section className={styles.mainContainer}>
 
-        <div className={styles.firstContainer}>
+        <section className={styles.firstContainer}>
           <section className={styles.profile}>
             <h2>Personal Info</h2>
             <div className={styles.profileTableContainer}>
@@ -117,8 +115,7 @@ function Profile() {
                 : null
             }
           </section>
-        </div>
-
+        </section>
 
         <section ref={postsDiv} className={styles.postsMainContainer}>
           <h2><p>Shared Posts</p><FaRegShareFromSquare /></h2>
@@ -132,8 +129,7 @@ function Profile() {
           </div>
         </section>
 
-
-      </div>
+      </section>
     </>
   );
 

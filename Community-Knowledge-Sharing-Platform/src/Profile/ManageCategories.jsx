@@ -2,76 +2,33 @@ import { MdManageAccounts } from "react-icons/md";
 import styles from './style.module.css'
 import MyContext from "../Context";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect, useContext } from "react";
+import { useRef, useEffect, useContext } from "react";
 
 function ManageCategories() {
 
-    const { token, id, username ,role} = useContext(MyContext);
+    const { token ,role, setRefreshCategories, categories} = useContext(MyContext);
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
-            navigate('/login');
+            navigate('/');
         }
         else if(role != "Manager"){
             navigate('/Profile');
         }
-    }, [token,role]);
-
-    // fill dropdown
-    const [refresh, setRefresh] = useState(true)
-    const [categories, setCategories] = useState([])
-    async function getAllCategories() {
-        const url = "http://localhost/SharingPlatform/api.php/Categories";
-        try {
-            const response = await fetch(url)
-            if (!response.ok) throw new Error("");
-            const data = await response.json()
-            if (data) {
-                setCategories(data)
-            }
-        }
-        catch (error) {
-            setError(error.message)
-        }
-    }
-    useEffect(() => { if (refresh) getAllCategories() }, [refresh])
+    }, []);
 
     const category = useRef(null)
     const newCategory = useRef(null)
 
-    // delete category (removed)
-    function handleDelete() {
-        let submittedId = category.current.value;
-        if (submittedId) {
-            const url = "http://localhost/SharingPlatform/api.php/Categories/" + submittedId;
-            try {
-                setRefresh(false)
-                const response = fetch(url,
-                    {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ Id: submittedId }),
-                    }
-                )
-                if (!response.ok) throw new Error("Failed To Delete")
-                setRefresh(true)
-            }
-            catch (error) {
-                console.log(error.message)
-            }
-        }
-    }
-
     // add category
-    function handleAdd() {
+    async function handleAdd(e) {
+        e.preventDefault()
         let submittedCategory = newCategory.current.value;
         if (submittedCategory) {
             const url = "http://localhost/SharingPlatform/api.php/Categories";
             try {
-                setRefresh(false)
-                const response = fetch(url,
+                setRefreshCategories(false)
+                const response = await fetch(url,
                     {
                         method: "POST",
                         headers: {
@@ -80,11 +37,12 @@ function ManageCategories() {
                         body: JSON.stringify({ Name: submittedCategory }),
                     }
                 )
-                if (!response.ok) throw new Error("Failed To Delete")
-                setRefresh(true)
+                if (!response.ok) throw new Error("Failed To Add")
+                e.target.reset()
+                setRefreshCategories(true)
             }
             catch (error) {
-                console.log(error.message)
+                // handle error
             }
         }
     }
@@ -94,7 +52,7 @@ function ManageCategories() {
 
             <h2><p>Manage Categories</p><MdManageAccounts /></h2>
 
-            <form className={styles.form}>
+            <form onSubmit={handleAdd} className={styles.form}>
 
                 <div>
                     <select name='Category' ref={category} className={styles.dropdown}>
@@ -109,7 +67,7 @@ function ManageCategories() {
 
                 <div>
                     <input ref={newCategory} className={styles.inputCategory} placeholder="New category" type="text" />
-                    <button className={styles.button} onClick={handleAdd}>Add</button>
+                    <button className={styles.button}>Add</button>
                 </div>
 
             </form>

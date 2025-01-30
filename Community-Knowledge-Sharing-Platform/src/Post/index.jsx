@@ -65,12 +65,10 @@ function Post({ postData, forProfile, setRefresh }) {
             }
         }
         catch (error) {
-            console.log(error.message)
+            // handle error
         }
     }
-    useEffect(() => {
-        getReaction();
-    }, [makeReaction])
+    useEffect(() => {getReaction();}, [makeReaction])
     useEffect(() => {
         reactions.filter((reaction) => {
             if (currentUserId == reaction.UserId) {
@@ -98,7 +96,7 @@ function Post({ postData, forProfile, setRefresh }) {
             }
         }
         catch (error) {
-            console.log(error.message)
+            // handle error
         }
     }
     useEffect(() => {
@@ -132,6 +130,7 @@ function Post({ postData, forProfile, setRefresh }) {
             addReaction(reaction)
         }
     }
+
     async function addReaction(reaction) {
         if (reaction) {
             const obj = {
@@ -157,7 +156,7 @@ function Post({ postData, forProfile, setRefresh }) {
                 }
 
             } catch (err) {
-                console.log("ERROR HERE: " + err);
+                // handle error
             }
         }
     }
@@ -174,7 +173,7 @@ function Post({ postData, forProfile, setRefresh }) {
             }
         }
         catch (error) {
-            console.log(error.message)
+            // handle error
         }
     }
     useEffect(() => {
@@ -190,7 +189,6 @@ function Post({ postData, forProfile, setRefresh }) {
                 PostId: postId,
                 Comment: submittedComment
             }
-            console.log(obj)
             const url = "http://localhost/SharingPlatform/api.php/Posts/Comments";
             try {
                 const response = await fetch(url, {
@@ -209,7 +207,7 @@ function Post({ postData, forProfile, setRefresh }) {
                 }
 
             } catch (err) {
-                console.log("ERROR HERE: " + err);
+                // handle error
             }
         }
     }
@@ -217,7 +215,6 @@ function Post({ postData, forProfile, setRefresh }) {
     // profile methods
     async function handleDelete() {
         const url = "http://localhost/SharingPlatform/api.php/Posts/" + postId;
-        console.log(url)
         try {
             setRefresh(false)
             const response = await fetch(url, {
@@ -227,7 +224,7 @@ function Post({ postData, forProfile, setRefresh }) {
             setRefresh(true)
         }
         catch (error) {
-            console.log(error.message)
+            // handle error
         }
     }
 
@@ -239,10 +236,11 @@ function Post({ postData, forProfile, setRefresh }) {
             PostLink: postData.Link,
             PostCode: postData.CodeSnippet
         }
-        navigate('/editpost', { state: data });
+        navigate('/EditPost', { state: data });
     }
 
     return (
+        
         <div className={styles.container}>
 
             <div className={styles.row1}>

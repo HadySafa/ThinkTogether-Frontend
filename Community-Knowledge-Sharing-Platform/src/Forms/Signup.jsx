@@ -29,7 +29,6 @@ function SignUp() {
     else setUsernameError('');
   }
 
-
   const location = useLocation();
   const { manager } = location.state || {};
 
@@ -110,17 +109,16 @@ function SignUp() {
       if (!response.ok) throw new Error("SignUp Failed");
       const data = await response.json();
       if (data) {
-        console.log("REACHED")
         if (manager) {
           navigate("/Homepage")
         }
         else {
-          navigate("/Login")
+          navigate("/")
         }
         setError(false);
       }
     } catch (err) {
-      console.log("SignUp Failed");
+      // handle error
     }
   }
 
@@ -143,7 +141,6 @@ function SignUp() {
   }
 
   return (
-
     <form onSubmit={handleSubmit} onReset={handleReset} className={styles.form}>
 
       <div className={styles.headerContainer}>
@@ -236,6 +233,7 @@ function SignUp() {
           Sign Up
         </button>
       </div>
+
 
     </form>
   );

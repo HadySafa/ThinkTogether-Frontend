@@ -11,7 +11,7 @@ function UpdateInfo() {
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
-            navigate('/login');
+            navigate('/');
         }
     }, [token]);
 
@@ -50,12 +50,10 @@ function UpdateInfo() {
                     navigate("/Profile")
                 }
             } catch (err) {
-                console.log("ERROR HERE: " + err);
+                // handle error
             }
         }
     }
-
-
 
     return (
         <section className={styles.updateInfoContainer}>

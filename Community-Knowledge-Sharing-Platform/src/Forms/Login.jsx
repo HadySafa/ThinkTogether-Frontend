@@ -1,6 +1,6 @@
 import styles from "./style.module.css";
-import { useState, useRef , useContext } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useContext } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import MyContext from "../Context";
 
 function Login() {
@@ -36,7 +36,6 @@ function Login() {
     }
   }
 
-
   // fetch api and handle response
   const [error, setError] = useState(null);
   async function verifyLogin(username, password) {
@@ -69,48 +68,51 @@ function Login() {
   }
 
   return (
-    <form onSubmit={handleSubmission} className={styles.form}>
+    <>
+      <form onSubmit={handleSubmission} className={styles.form}>
 
-      <div className={styles.headerContainer}>
-        <h2>Login</h2>
-      </div>
+        <div className={styles.headerContainer}>
+          <h2>Login</h2>
+        </div>
 
-      <div className={styles.container}>
-        <label className={styles.label} htmlFor="username">
-          Username
-        </label>
-        <input
-          ref={usernameField}
-          onBlur={() => handleBlur("username")}
-          type="text"
-          id="username"
-          className={`${styles.input} ${error || usernameMissing ? styles.inputError : null}`}
-        />
-      </div>
+        <div className={styles.container}>
+          <label className={styles.label} htmlFor="username">
+            Username
+          </label>
+          <input
+            ref={usernameField}
+            onBlur={() => handleBlur("username")}
+            type="text"
+            id="username"
+            className={`${styles.input} ${error || usernameMissing ? styles.inputError : null}`}
+          />
+        </div>
 
-      <div className={styles.container}>
-        <label className={styles.label} htmlFor="password">
-          Password
-        </label>
-        <input
-          ref={passwordField}
-          onBlur={() => handleBlur("password")}
-          type="password"
-          id="password"
-          className={`${styles.input} ${error || passwordMissing ? styles.inputError : null}`}
-        />
-      </div>
+        <div className={styles.container}>
+          <label className={styles.label} htmlFor="password">
+            Password
+          </label>
+          <input
+            ref={passwordField}
+            onBlur={() => handleBlur("password")}
+            type="password"
+            id="password"
+            className={`${styles.input} ${error || passwordMissing ? styles.inputError : null}`}
+          />
+        </div>
 
-      <div className={styles.buttonsContainer}>
-        <button className={styles.cancel} type="reset">
-          Cancel
-        </button>
-        <button className={styles.submit} type="submit">
-          Login
-        </button>
-      </div>
+        <div className={styles.buttonsContainer}>
+          <button className={styles.cancel} type="reset">
+            Cancel
+          </button>
+          <button className={styles.submit} type="submit">
+            Login
+          </button>
+        </div>
 
-    </form>
+        <div className={styles.link}><p>Don't have an account?</p> <Link to="/SignUp">Create Account</Link></div>
+      </form>
+      </>
   );
 
 }

@@ -37,7 +37,7 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
     }
     function handleLogout() {
         setToken("")
-        navigate("/Login")
+        navigate("/")
     }
     function handleSearch(){
         navigate("/Search")

@@ -214,12 +214,12 @@ table>tbody>tr:last-child>td {
     font-size: 1.75rem;
 }
 
-.inputCategory{
-    border:2px solid lightgray;
+.inputCategory {
+    border: 2px solid lightgray;
     padding: 8px;
     border-radius: 5px;
-    min-width:40%;
-    max-width:40%;
+    min-width: 60%;
+    max-width: 60%;
     margin-right: 1rem;
 }
 
@@ -227,8 +227,8 @@ table>tbody>tr:last-child>td {
     border: 2px solid lightgray;
     padding: 0.5rem;
     border-radius: 5px;
-    min-width:40%;
-    max-width:40%;
+    min-width: 80%;
+    max-width: 80%;
     margin-right: 1rem;
 }
 
@@ -247,10 +247,16 @@ table>tbody>tr:last-child>td {
 
 
 @media (min-width:900px) {
+
+    .dropdown, .inputCategory{
+        min-width: 40%;
+        max-width: 40%;
+    }
+
     .mainContainer {
         flex-direction: row;
         margin-top: 6rem;
-        gap:5vw;
+        gap: 5vw;
     }
 
     .firstContainer {
@@ -263,14 +269,11 @@ table>tbody>tr:last-child>td {
         max-width: 45vw;
     }
 
-    .changePassContainer, .updateInfoContainer, .categoriesContainer  {
+    .changePassContainer,
+    .updateInfoContainer,
+    .categoriesContainer {
         min-width: 60vw;
         max-width: 60vw;
     }
 
 }
-
-
-
-
-

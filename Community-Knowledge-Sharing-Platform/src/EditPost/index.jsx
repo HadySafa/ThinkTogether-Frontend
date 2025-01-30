@@ -1,5 +1,5 @@
 import styles from './style.module.css'
-import { useEffect, useRef, useState, useContext } from 'react'
+import { useEffect, useRef, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import { FaPen } from "react-icons/fa6";
@@ -13,10 +13,10 @@ function EditPost() {
     const data = location.state;
     useEffect(() => {
         if (!token) {
-            navigate('/login');
+            navigate('/');
         }
         if (!data) {
-            navigate('/profile');
+            navigate('/Profile');
         }
     }, [token]);
 
@@ -25,6 +25,8 @@ function EditPost() {
     const description = useRef(null)
     const link = useRef(null)
     const code = useRef(null)
+
+    // fill the fields
     useEffect(() => {
         if (data) {
             title.current.value = data.PostTitle;
@@ -33,8 +35,6 @@ function EditPost() {
             code.current.value = data.PostCode;
         }
     }, [data])
-
-
 
     // handle submission
     async function handleSubmission(e) {
@@ -56,9 +56,9 @@ function EditPost() {
         if (postData.Title && postData.Description && postData.UserId) {
             let result = await editPost(postData);
             if (result) {
+                form.current.reset();
                 navigate("/Profile")
             }
-            form.current.reset();
         }
     }
     async function editPost(formData) {
@@ -75,7 +75,7 @@ function EditPost() {
             if (!response.ok) throw new Error("Edit Failed");
             return true
         } catch (err) {
-            console.log("ERROR HERE: " + err);
+            // handle error
         }
     }
 

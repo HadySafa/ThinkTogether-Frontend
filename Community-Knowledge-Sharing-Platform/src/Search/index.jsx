@@ -27,7 +27,6 @@ function Search() {
             }
             catch (error) {
                 setPosts([])
-                console.log(error.message)
                 setError("No search results found for " + searchParameter)
             }
         }
@@ -54,7 +53,7 @@ function Search() {
                     {
                         posts && posts.length > 0
                             ?
-                            <div className={styles.postsContainer}>{posts.map((obj, index) => <Post key={index} postData={obj} />)}</div>
+                            <section className={styles.postsContainer}>{posts.map((obj, index) => <Post key={index} postData={obj} />)}</section>
                             : error ? <div>{error}</div> : null
                     }
                 </div>

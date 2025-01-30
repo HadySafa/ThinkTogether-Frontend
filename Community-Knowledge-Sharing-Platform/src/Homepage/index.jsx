@@ -14,10 +14,10 @@ function Homepage() {
   const navigate = useNavigate(null)
 
   // redirect if not logged in
-  const { id, token, username } = useContext(MyContext);
+  const { categories, token, username } = useContext(MyContext);
   useEffect(() => {
     if (!token) {
-      navigate('/login');
+      navigate('/');
     }
   }, [token]);
 
@@ -46,33 +46,13 @@ function Homepage() {
       //setError(error.message)
     }
   }
-  useEffect(() => {
-    getAllPosts();
-  }, [])
+  useEffect(() => {getAllPosts();}, [])
 
 
   // link to profile page
   function toProfile() {
     navigate("/Profile")
   }
-
-  // get categories
-  const [categories, setCategories] = useState([])
-  async function getAllCategories() {
-    const url = "http://localhost/SharingPlatform/api.php/Categories";
-    try {
-      const response = await fetch(url)
-      if (!response.ok) throw new Error("");
-      const data = await response.json()
-      if (data) {
-        setCategories(data)
-      }
-    }
-    catch (error) {
-      console.log(error.message)
-    }
-  }
-  useEffect(() => { getAllCategories() }, [])
 
 
   // filter
@@ -116,7 +96,7 @@ function Homepage() {
       if (data) setPosts(data)
     }
     catch (err) {
-      console.log(err.message)
+      // handle error
     }
   }
   function chooseCategory(id, name) {
@@ -125,31 +105,30 @@ function Homepage() {
   }
 
   // pagination logic
-  const [currentPage,setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1)
   let postsPerPage = 3;
   let nbOfPages = Math.ceil(posts.length / postsPerPage)
   let firstIndex = (currentPage - 1) * postsPerPage;
   let lastIndex = currentPage == nbOfPages ? posts.length : firstIndex + 3
-  function nextPage(){
-    if(currentPage < nbOfPages) {
-      setCurrentPage( (prev) => prev + 1)
-      window.scrollTo(0,0)
+  function nextPage() {
+    if (currentPage < nbOfPages) {
+      setCurrentPage((prev) => prev + 1)
+      window.scrollTo(0, 0)
     }
   }
-  function prevPage(){
-    if(currentPage > 1) {
-      setCurrentPage( (prev) => prev - 1)
-      window.scrollTo(0,0)
+  function prevPage() {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1)
+      window.scrollTo(0, 0)
     }
   }
-
 
   return (
     <>
       <Header homeActive={true} />
-      <div className={styles.mainContainer}>
+      <section className={styles.mainContainer}>
 
-        <div className={styles.firstContainer}>
+        <section className={styles.firstContainer}>
 
           <div className={styles.userInfoContainer}>
             <div>
@@ -180,15 +159,18 @@ function Homepage() {
             </div>
           </div>
 
-        </div>
+        </section>
 
-        <div className={styles.postsContainer}>
+        <section className={styles.postsContainer}>
+          {/*for posts*/}
           {
             posts && posts.length > 0
               ? //shuffleArray(posts).map( (obj,index) => id == obj.UserId ? null : <Post key={index} postData={obj} />)
-              dropdown.current.value ? posts.slice(firstIndex,lastIndex).map((obj, index) => <Post key={index} postData={obj} />) : shuffleArray(posts).slice(firstIndex,lastIndex).map((obj, index) => <Post key={index} postData={obj} />)
+              dropdown.current.value ? posts.slice(firstIndex, lastIndex).map((obj, index) => <Post key={index} postData={obj} />) : shuffleArray(posts).slice(firstIndex, lastIndex).map((obj, index) => <Post key={index} postData={obj} />)
               : "No posts found"
           }
+
+          {/*for pagination*/}
           {
             posts && posts.length > 0
               ?
@@ -199,9 +181,9 @@ function Homepage() {
               </div>
               : null
           }
-        </div>
+        </section>
 
-      </div >
+      </section >
     </>
   );
 

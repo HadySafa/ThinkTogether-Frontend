@@ -1,5 +1,5 @@
 import styles from './style.module.css'
-import { useEffect, useRef, useState, useContext } from 'react'
+import { useEffect, useRef, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import { FaPen } from "react-icons/fa6";
@@ -7,14 +7,13 @@ import Header from '../Header';
 
 function CreatePost() {
 
-    const { id, token } = useContext(MyContext);
+    const { id, token, categories } = useContext(MyContext);
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
-            navigate('/login');
+            navigate('/');
         }
     }, [token]);
-
 
     const form = useRef(null)
     const title = useRef(null)
@@ -24,26 +23,9 @@ function CreatePost() {
     const code = useRef(null)
     const tags = useRef(null)
 
-    // fill dropdown
-    const [categories, setCategories] = useState([])
-    async function getAllCategories() {
-        const url = "http://localhost/SharingPlatform/api.php/Categories";
-        try {
-            const response = await fetch(url)
-            if (!response.ok) throw new Error("");
-            const data = await response.json()
-            if (data) {
-                setCategories(data)
-            }
-        }
-        catch (error) {
-            setError(error.message)
-        }
-    }
-    useEffect(() => { getAllCategories() }, [])
-
     // handle submission
     async function handleSubmission(e) {
+
         e.preventDefault();
 
         let submittedTitle = title.current.value;
@@ -71,10 +53,9 @@ function CreatePost() {
                         addNewTag(submittedTags[i], result)
                     }
                 }
-
+                form.current.reset();
                 navigate("/Homepage")
             }
-            form.current.reset();
         }
     }
     async function addNewPost(formData) {
@@ -95,7 +76,7 @@ function CreatePost() {
             };
 
         } catch (err) {
-            console.log("ERROR HERE: " + err);
+            return false
         }
     }
     async function addNewTag(tagName, postId) {
@@ -112,14 +93,10 @@ function CreatePost() {
                 },
                 body: JSON.stringify(object),
             });
-            if (response.ok) {
-                return true;
-            }
-            else {
-                throw new Error("Creation Failed")
-            }
+            if (!response.ok) throw new Error("Creation Failed")
+            return true;
         } catch (err) {
-            console.log("ERROR HERE: " + err);
+            return false;
         }
     }
 
@@ -127,6 +104,7 @@ function CreatePost() {
 
         <>
             <Header makePostActive={true} />
+
             <form ref={form} className={styles.form} method='post' onSubmit={handleSubmission}>
 
                 <h2 className={styles.header}><p>Create Post</p><FaPen className={styles.icon} /></h2>
