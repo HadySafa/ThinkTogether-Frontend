@@ -69,3 +69,9 @@ npm run dev
  ## Note
 
 The backend part of this project is in a separate repository. Make sure to [check it out here](https://github.com/HadySafa/ThinkTogether-Backend) for the complete application.
+
+ ## Screenshots
+
+![SignUp](./Community-Knowledge-Sharing-Platform//src/assets/SignUp.png)
+![Homepage](./Community-Knowledge-Sharing-Platform//src/assets/Homepage.png)
+![Profile](./Community-Knowledge-Sharing-Platform//src/assets/Profile.png)
