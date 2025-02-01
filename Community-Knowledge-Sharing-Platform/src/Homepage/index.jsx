@@ -39,14 +39,14 @@ function Homepage() {
       if (!response.ok) throw new Error("");
       const data = await response.json()
       if (data) {
-        setPosts(data)
+        setPosts(shuffleArray(data))
       }
     }
     catch (error) {
       //setError(error.message)
     }
   }
-  useEffect(() => {getAllPosts();}, [])
+  useEffect(() => { getAllPosts(); }, [])
 
 
   // link to profile page
@@ -166,7 +166,7 @@ function Homepage() {
           {
             posts && posts.length > 0
               ? //shuffleArray(posts).map( (obj,index) => id == obj.UserId ? null : <Post key={index} postData={obj} />)
-              dropdown.current.value ? posts.slice(firstIndex, lastIndex).map((obj, index) => <Post key={index} postData={obj} />) : shuffleArray(posts).slice(firstIndex, lastIndex).map((obj, index) => <Post key={index} postData={obj} />)
+              posts.slice(firstIndex, lastIndex).map((obj, index) => <Post key={index} postData={obj} />)
               : "No posts found"
           }
 

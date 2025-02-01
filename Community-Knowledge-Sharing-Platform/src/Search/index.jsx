@@ -13,8 +13,10 @@ function Search() {
     // get posts based on search
     async function handleSubmit(e) {
         setError("")
+        setPosts([])
         e.preventDefault();
         const searchParameter = searchInputField.current.value;
+        console.log(searchParameter)
         if (searchParameter) {
             const url = "http://localhost/SharingPlatform/api.php/Posts/Search/" + searchParameter;
             try {
@@ -45,6 +47,7 @@ function Search() {
                             ref={searchInputField}
                             placeholder='Enter a Keyword'
                             className={styles.input}
+                            type='text'
                         />
                         <button className={styles.button} type='submit'>Search</button>
                     </form>
