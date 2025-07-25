@@ -11,6 +11,8 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 
 function Homepage() {
 
+  // note: handle loading and error states
+
   const navigate = useNavigate(null)
 
   // redirect if not logged in
@@ -24,8 +26,8 @@ function Homepage() {
   // function to shuffle array elements
   function shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1)); // Random index from 0 to i
-      [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap elements at i and j
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
   }
@@ -48,9 +50,9 @@ function Homepage() {
       if (data) {
         setPosts(shuffleArray(data.posts));
       }
+      Fff
     } catch (error) {
-      // setError(error.message);
-      console.error(error);
+      //
     }
   }
 
@@ -96,7 +98,7 @@ function Homepage() {
       }
     }
     catch (error) {
-      //setError(error.message)
+      //
     }
   }
 
@@ -146,6 +148,7 @@ function Homepage() {
   return (
     <>
       <Header homeActive={true} />
+
       <section className={styles.mainContainer}>
 
         <section className={styles.firstContainer}>

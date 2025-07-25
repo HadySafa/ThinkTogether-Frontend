@@ -5,14 +5,18 @@ import MyContext from "../Context";
 
 function Login() {
 
+  // note: handle loading state
+
   const usernameField = useRef(null);
   const passwordField = useRef(null);
   const navigate = useNavigate();
   const { setToken } = useContext(MyContext);
 
-  // form validation
   const [usernameMissing, setUsernameMissing] = useState(null);
   const [passwordMissing, setPasswordMissing] = useState(null);
+  const [error, setError] = useState(null);
+
+  // form validation
   function handleBlur(caller) {
     if (caller == "username" && usernameField.current.value) {
       setUsernameMissing(false);
@@ -23,21 +27,25 @@ function Login() {
       setError(false)
     }
   }
+
   function handleSubmission(e) {
+
     e.preventDefault();
+
     const username = usernameField.current.value;
     const password = passwordField.current.value;
+
     if (!username) setUsernameMissing(true)
     if (!password) setPasswordMissing(true)
+
     if (username && password) {
       verifyLogin(username, password);
       setUsernameMissing(false)
       setPasswordMissing(false)
     }
+
   }
 
-  // fetch api and handle response
-  const [error, setError] = useState(null);
   async function verifyLogin(username, password) {
     const url = "http://localhost:8000/api/login";
     const requestData = {
@@ -112,8 +120,10 @@ function Login() {
         </div>
 
         <div className={styles.link}><p>Don't have an account?</p> <Link to="/SignUp">Create Account</Link></div>
+
       </form>
-      </>
+
+    </>
   );
 
 }

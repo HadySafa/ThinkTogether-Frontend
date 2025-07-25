@@ -6,13 +6,15 @@ import { useRef, useEffect, useContext } from "react";
 
 function ManageCategories() {
 
-    const { token ,role, setRefreshCategories, categories} = useContext(MyContext);
+    // note: handle loading and error states 
+
+    const { token, role, setRefreshCategories, categories } = useContext(MyContext);
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
             navigate('/');
         }
-        else if(role != "Manager"){
+        else if (role != "Manager") {
             navigate('/Profile');
         }
     }, []);
@@ -43,7 +45,7 @@ function ManageCategories() {
                 setRefreshCategories(true)
             }
             catch (error) {
-                // handle error
+                // 
             }
         }
     }

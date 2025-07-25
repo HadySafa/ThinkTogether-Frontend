@@ -7,9 +7,12 @@ import Header from '../Header';
 
 function CreatePost() {
 
-    const { id, token, categories } = useContext(MyContext);
+    // note: handle loading and error states
+
+    const { token, categories } = useContext(MyContext);
     const navigate = useNavigate(null)
 
+    // if not logged In, redirect
     useEffect(() => {
         if (!token) {
             navigate('/');
@@ -25,11 +28,12 @@ function CreatePost() {
     const tags = useRef(null)
 
     async function handleSubmission(e) {
+
         e.preventDefault();
 
         let submittedTitle = title.current.value;
         let submittedDescription = description.current.value;
-        let submittedCategory = parseInt(category.current.value); // converted to int
+        let submittedCategory = parseInt(category.current.value); 
         let submittedLink = link.current.value || "";
         let submittedCode = code.current.value || "";
         let submittedTags = tags.current.value.split(",");
@@ -39,11 +43,10 @@ function CreatePost() {
             description: submittedDescription,
             category_id: submittedCategory,
             link: submittedLink,
-            codesnippet: submittedCode,
-            user_id: id
+            codesnippet: submittedCode
         }
 
-        if (postData.title && postData.description && postData.category_id && postData.user_id) {
+        if (postData.title && postData.description && postData.category_id) {
             let result = await addNewPost(postData);
             if (result) {
                 if(submittedTags.length > 0) addNewTag(submittedTags,result)
@@ -51,6 +54,7 @@ function CreatePost() {
                 navigate("/Homepage")
             }
         }
+
     }
 
     async function addNewPost(formData) {
@@ -75,7 +79,7 @@ function CreatePost() {
         try {
             const response = await fetch(url, {
                 method: "POST",
-                headers: { "Content-Type": "application/json", 'Authorization': 'Bearer' + token },
+                headers: { "Content-Type": "application/json", 'Authorization': 'Bearer ' + token },
                 body: JSON.stringify(object),
             });
             if (!response.ok) throw new Error("Creation Failed")
@@ -134,6 +138,7 @@ function CreatePost() {
                     <button type='reset' className={styles.cancel}>Cancel</button>
                     <button type='submit' className={styles.submit}>Post</button>
                 </div>
+
             </form>
         </>
     )

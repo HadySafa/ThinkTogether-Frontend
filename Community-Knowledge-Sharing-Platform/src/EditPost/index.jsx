@@ -7,7 +7,9 @@ import { useLocation } from 'react-router-dom';
 
 function EditPost() {
 
-    const { id, token } = useContext(MyContext);
+    // note: handle loading and error states
+
+    const { token } = useContext(MyContext);
     const navigate = useNavigate(null)
     const location = useLocation();
     const data = location.state;
@@ -26,12 +28,7 @@ function EditPost() {
     const link = useRef(null)
     const code = useRef(null)
 
-    // for testing
-    useEffect(() => {
-        console.log(data.id)
-    }, [])
-
-    // fill the fields
+    // fill the fields with existing data
     useEffect(() => {
         if (data) {
             title.current.value = data.title;
@@ -43,6 +40,7 @@ function EditPost() {
 
     // handle submission
     async function handleSubmission(e) {
+
         e.preventDefault();
 
         let submittedTitle = title.current.value;
@@ -64,12 +62,14 @@ function EditPost() {
                 navigate("/Profile")
             }
         }
+
     }
+
     async function editPost(formData) {
+
         const url = "http://localhost:8000/api/posts/" + data.id;
         const requestData = formData
-        console.log(requestData)
-        console.log(url)
+
         try {
             const response = await fetch(url, {
                 method: "PUT",
@@ -82,7 +82,7 @@ function EditPost() {
             if (!response.ok) throw new Error("Edit Failed");
             return true
         } catch (err) {
-            // handle error
+            //
         }
     }
 

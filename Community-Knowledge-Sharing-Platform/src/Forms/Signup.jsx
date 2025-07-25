@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function SignUp() {
+
+  // note: handle loading and error states
+
   const navigate = useNavigate();
   const location = useLocation();
   const { manager } = location.state || {};
@@ -19,7 +22,7 @@ function SignUp() {
     phonenumber: '',
     password: '',
     password_confirmation: '',
-    role: manager ? "Manager" : "User"  // ✅ changed to lowercase
+    role: manager ? "Manager" : "User"
   });
 
   function handleChange(e) {
@@ -33,7 +36,7 @@ function SignUp() {
   async function checkUserAvailable(username) {
     const url = `http://localhost:8000/api/check-username?username=${username}`;
     try {
-      const response = await fetch(url,{
+      const response = await fetch(url, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -109,7 +112,7 @@ function SignUp() {
         phonenumber: '',
         password: '',
         password_confirmation: '',
-        role: "User"  // ✅ lowercase
+        role: "User"
       });
     } else {
       setMissingField(true);
@@ -127,7 +130,7 @@ function SignUp() {
       phonenumber: '',
       password: '',
       password_confirmation: '',
-      role: 'User'  // ✅ lowercase
+      role: 'User'
     });
   }
 

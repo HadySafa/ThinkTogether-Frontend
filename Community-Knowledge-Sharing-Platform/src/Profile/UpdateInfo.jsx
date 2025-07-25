@@ -6,6 +6,8 @@ import { useEffect, useRef, useContext } from 'react'
 
 function UpdateInfo() {
 
+    // note: handle loading and error states
+
     // give access
     const { token, setToken, id, fullName, number } = useContext(MyContext);
     const navigate = useNavigate(null)
@@ -33,7 +35,7 @@ function UpdateInfo() {
             const url = "http://localhost:8000/api/users";
             const requestData = {
                 fullname: submittedName ? submittedName : fullName,
-                phonenumber : submittedNumber ? submittedNumber : number
+                phonenumber: submittedNumber ? submittedNumber : number
             }
             try {
                 const response = await fetch(url, {
@@ -51,7 +53,7 @@ function UpdateInfo() {
                     navigate("/Profile")
                 }
             } catch (err) {
-                // handle error
+                // 
             }
         }
     }

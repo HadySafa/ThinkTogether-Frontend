@@ -6,6 +6,8 @@ import { IoMdSearch } from "react-icons/io";
 
 function Search() {
 
+    // note: handle loading and error states
+
     const [posts, setPosts] = useState([])
     const [error, setError] = useState("")
     const searchInputField = useRef(null)

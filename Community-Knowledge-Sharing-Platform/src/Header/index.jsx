@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import logo from '../assets/logo.png'
 
-function Header({homeActive,profileActive,makePostActive,searchActive}) {
+function Header({ homeActive, profileActive, makePostActive, searchActive }) {F
 
     const navigate = useNavigate(null)
     const { setToken } = useContext(MyContext);
@@ -39,7 +39,7 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
         setToken("")
         navigate("/")
     }
-    function handleSearch(){
+    function handleSearch() {
         navigate("/Search")
     }
 
@@ -55,7 +55,7 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
         };
     }, []);
     useEffect(() => {
-        if(isWideScreen) setShowNav(false)
+        if (isWideScreen) setShowNav(false)
     }, [isWideScreen]);
 
 
@@ -70,14 +70,14 @@ function Header({homeActive,profileActive,makePostActive,searchActive}) {
             <div>
                 {
                     !isWideScreen
-                    ? <div className={styles.icons}>{showNav ? <IoClose onClick={toggleNav} /> : <RxHamburgerMenu onClick={toggleNav} />}</div>
-                    : <nav className={styles.horizantalNav}>
+                        ? <div className={styles.icons}>{showNav ? <IoClose onClick={toggleNav} /> : <RxHamburgerMenu onClick={toggleNav} />}</div>
+                        : <nav className={styles.horizantalNav}>
                             <div className={homeActive ? styles.active : null} title='Home' onClick={handleHome}><IoHomeSharp /></div>
                             <div className={searchActive ? styles.active : null} onClick={handleSearch} title='Search'><FaSearch /></div>
                             <div className={makePostActive ? styles.active : null} title='New post' onClick={handleNewPost}><FaPen /></div>
                             <div className={profileActive ? styles.active : null} title='Profile' onClick={handleProfile}><FaUser /></div>
                             <div className={styles.button} onClick={handleLogout}>Logout</div>
-                      </nav>
+                        </nav>
                 }
             </div>
 

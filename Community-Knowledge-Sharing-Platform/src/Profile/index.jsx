@@ -8,6 +8,8 @@ import { FaRegShareFromSquare } from "react-icons/fa6";
 
 function Profile() {
 
+  // note: handle loading and error states
+
   const { token, id, role, fullName, username, number } = useContext(MyContext);
   const navigate = useNavigate(null)
   useEffect(() => {
@@ -59,7 +61,7 @@ function Profile() {
       }
     }
     catch (error) {
-      //setError(error.message)
+      //
     }
   }
   useEffect(() => {

@@ -6,7 +6,9 @@ import { FaPen } from "react-icons/fa";
 
 function ChangePassword() {
 
-    const { token, id, username } = useContext(MyContext);
+    // note: handle loading and error states
+
+    const { token, username } = useContext(MyContext);
     const navigate = useNavigate(null)
     useEffect(() => {
         if (!token) {
@@ -69,7 +71,7 @@ function ChangePassword() {
                 return false
             }
         } catch (err) {
-            // handle error
+            // 
         }
     }
 
@@ -125,11 +127,10 @@ function ChangePassword() {
                     throw new Error("Edit Failed");
                 }
 
-                navigate("/"); // redirect on success
+                navigate("/");
 
             } catch (err) {
-                console.error("Update failed", err);
-                // optionally set error state
+                // 
             }
         }
     }

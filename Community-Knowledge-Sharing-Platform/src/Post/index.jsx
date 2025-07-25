@@ -14,6 +14,8 @@ import { MdDelete } from "react-icons/md";
 
 function Post({ postData, forProfile, setRefresh }) {
 
+    // note: handle loading and error states
+
     // check if user logged in
     const { id } = useContext(MyContext);
     const navigate = useNavigate(null)
@@ -47,7 +49,7 @@ function Post({ postData, forProfile, setRefresh }) {
             () => {
                 setCopied(true)
             },
-            (err) => {
+            () => {
                 setCopied(false)
             }
         );
@@ -168,7 +170,7 @@ function Post({ postData, forProfile, setRefresh }) {
                 }
 
             } catch (err) {
-                // handle error
+                // 
             }
         }
     }
@@ -191,7 +193,7 @@ function Post({ postData, forProfile, setRefresh }) {
             }
         }
         catch (error) {
-            // handle error
+            //
         }
     }
     useEffect(() => {
@@ -225,7 +227,7 @@ function Post({ postData, forProfile, setRefresh }) {
                 }
 
             } catch (err) {
-                // handle error
+                // 
             }
         }
     }
@@ -246,7 +248,7 @@ function Post({ postData, forProfile, setRefresh }) {
             setRefresh(true)
         }
         catch (error) {
-            // handle error
+            //
         }
     }
 
