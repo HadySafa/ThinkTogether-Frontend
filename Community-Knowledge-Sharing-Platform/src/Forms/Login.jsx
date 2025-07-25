@@ -39,10 +39,10 @@ function Login() {
   // fetch api and handle response
   const [error, setError] = useState(null);
   async function verifyLogin(username, password) {
-    const url = "http://localhost/SharingPlatform/api.php/Users/Login";
+    const url = "http://localhost:8000/api/login";
     const requestData = {
-      Username: username,
-      Password: password,
+      username: username,
+      password: password,
     };
     try {
       setError(false)
@@ -50,6 +50,7 @@ function Login() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Authorization': 'Bearer' + token
         },
         body: JSON.stringify(requestData),
       });

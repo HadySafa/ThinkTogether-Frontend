@@ -30,23 +30,24 @@ function UpdateInfo() {
         let submittedName = nameField.current.value
         let submittedNumber = numberField.current.value
         if (submittedName || submittedNumber) {
-            const url = "http://localhost/SharingPlatform/api.php/Users/" + id;
+            const url = "http://localhost:8000/api/users";
             const requestData = {
-                FullName: submittedName ? submittedName : fullName,
-                PhoneNumber: submittedNumber ? submittedNumber : number
+                fullname: submittedName ? submittedName : fullName,
+                phonenumber : submittedNumber ? submittedNumber : number
             }
             try {
                 const response = await fetch(url, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": "Bearer" + token
                     },
                     body: JSON.stringify(requestData),
                 });
                 if (!response.ok) throw new Error("Edit Failed");
                 const data = await response.json()
                 if (data) {
-                    setToken(data.token)
+                    //setToken(data.token)
                     navigate("/Profile")
                 }
             } catch (err) {

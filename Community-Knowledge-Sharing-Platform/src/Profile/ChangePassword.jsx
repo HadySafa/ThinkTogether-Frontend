@@ -46,16 +46,17 @@ function ChangePassword() {
         }
     }
     async function verifyLogin(username, password) {
-        const url = "http://localhost/SharingPlatform/api.php/Users/Login/" + id;
+        const url = "http://localhost:8000/api/login";
         const requestData = {
-            Username: username,
-            Password: password,
+            username: username,
+            password: password,
         };
         try {
             const response = await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": "Bearer" + token
                 },
                 body: JSON.stringify(requestData),
             });
@@ -95,28 +96,45 @@ function ChangePassword() {
     }
     async function handleUpdate(e) {
         e.preventDefault();
-        let submittedPassword = newPassword.current.value
-        if (submittedPassword) {
-            const url = "http://localhost/SharingPlatform/api.php/Users/Password/" + id;
+
+        const oldPass = oldPassword.current.value;
+        const newPass = newPassword.current.value;
+        const confirmPass = confirmNewPassword.current.value;
+
+        if (newPass && newPass === confirmPass) {
+            const url = "http://localhost:8000/api/update-password";
             const requestData = {
-                Password: submittedPassword
-            }
+                current_password: oldPass,
+                new_password: newPass,
+                new_password_confirmation: confirmPass
+            };
+
             try {
                 const response = await fetch(url, {
-                    method: "PUT",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": 'Bearer' + token
                     },
                     body: JSON.stringify(requestData),
                 });
-                if (!response.ok) throw new Error("Edit Failed");
-                navigate("/")
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.log("Error:", errorData);
+                    throw new Error("Edit Failed");
+                }
+
+                navigate("/"); // redirect on success
+
             } catch (err) {
-                // handle error
+                console.error("Update failed", err);
+                // optionally set error state
             }
         }
     }
-    
+
+
     return (
         <section className={styles.changePassContainer}>
 

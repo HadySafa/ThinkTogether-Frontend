@@ -25,7 +25,7 @@ function ManageCategories() {
         e.preventDefault()
         let submittedCategory = newCategory.current.value;
         if (submittedCategory) {
-            const url = "http://localhost/SharingPlatform/api.php/Categories";
+            const url = "http://localhost:8000/api/categories";
             try {
                 setRefreshCategories(false)
                 const response = await fetch(url,
@@ -33,8 +33,9 @@ function ManageCategories() {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
+                            'Authorization': "Bearer" + token
                         },
-                        body: JSON.stringify({ Name: submittedCategory }),
+                        body: JSON.stringify({ name: submittedCategory }),
                     }
                 )
                 if (!response.ok) throw new Error("Failed To Add")

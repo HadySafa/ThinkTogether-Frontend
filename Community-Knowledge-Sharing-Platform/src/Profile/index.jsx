@@ -43,13 +43,19 @@ function Profile() {
   const [posts, setPosts] = useState([])
   const [refresh, setRefresh] = useState(true)
   async function getAllPosts(id) {
-    const url = "http://localhost/SharingPlatform/api.php/Posts/" + id;
+    const url = "http://localhost:8000/api/users/" + id + "/posts";
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer' + token
+        }
+      });
       if (!response.ok) throw new Error("");
       const data = await response.json()
       if (data) {
-        setPosts(data)
+        setPosts(data.posts)
       }
     }
     catch (error) {

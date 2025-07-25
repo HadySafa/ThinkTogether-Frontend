@@ -25,19 +25,19 @@ function Post({ postData, forProfile, setRefresh }) {
     const [viewComments, setViewComments] = useState(false)
     const [viewReactions, setViewReactions] = useState(false)
     const currentUserId = id;
-    const [postId, setPostId] = useState(postData.Id)
+    const [postId, setPostId] = useState(postData.id)
     const [comments, setComments] = useState([])
     const [tags, setTags] = useState([])
     const [reactions, setReactions] = useState([])
     const comment = useRef()
     const data = {
-        username: postData.Username,
-        title: postData.Title,
-        description: postData.Description,
-        link: postData.Link,
-        code: postData.CodeSnippet,
-        category: postData.CategoryName,
-        likes: postData?.LikeCount 
+        username: postData.user.username,
+        title: postData.title,
+        description: postData.description,
+        link: postData.link,
+        code: postData.codesnippet,
+        category: postData.category.name,
+        likes: postData?.like_count
     }
 
     // related to the code block
@@ -55,28 +55,34 @@ function Post({ postData, forProfile, setRefresh }) {
 
     // function to get reaction
     async function getReaction() {
-        const url = "http://localhost/SharingPlatform/api.php/Posts/Reactions/" + postId;
+        const url = "http://localhost:8000/api/posts/" + postId + "/reactions";
         try {
-            const response = await fetch(url)
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer' + token
+                }
+            });
             if (!response.ok) throw new Error("");
             const data = await response.json()
             if (data) {
-                setReactions(data)
+                setReactions(data.reactions)
             }
         }
         catch (error) {
             // handle error
         }
     }
-    useEffect(() => {getReaction();}, [makeReaction])
+    useEffect(() => { getReaction(); }, [makeReaction])
     useEffect(() => {
         reactions.filter((reaction) => {
-            if (currentUserId == reaction.UserId) {
-                if (reaction.Reaction == "Like") {
+            if (currentUserId == reaction.user_id) {
+                if (reaction.reaction == "Like") {
                     setLiked(true)
                     setDisliked(false)
                 }
-                else if (reaction.Reaction == "Dislike") {
+                else if (reaction.reaction == "Dislike") {
                     setLiked(false)
                     setDisliked(true)
                 }
@@ -86,13 +92,19 @@ function Post({ postData, forProfile, setRefresh }) {
 
     // function to get tags
     async function getTags() {
-        const url = "http://localhost/SharingPlatform/api.php/Posts/Tags/" + postId;
+        const url = "http://localhost:8000/api/posts/" + postId + "/tags";
         try {
-            const response = await fetch(url)
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer' + token
+                }
+            });
             if (!response.ok) throw new Error("");
             const data = await response.json()
             if (data) {
-                setTags(data)
+                setTags(data.tags)
             }
         }
         catch (error) {
@@ -134,16 +146,16 @@ function Post({ postData, forProfile, setRefresh }) {
     async function addReaction(reaction) {
         if (reaction) {
             const obj = {
-                UserId: currentUserId,
-                PostId: postId,
-                Reaction: reaction
+                user_id: currentUserId,
+                reaction: reaction
             }
-            const url = "http://localhost/SharingPlatform/api.php/Posts/Reactions";
+            const url = "http://localhost:8000/api/posts/" + postId + "/reactions";
             try {
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        'Authorization': "Bearer" + token
                     },
                     body: JSON.stringify(obj),
                 });
@@ -163,13 +175,19 @@ function Post({ postData, forProfile, setRefresh }) {
 
     // function to get comments
     async function getComments() {
-        const url = "http://localhost/SharingPlatform/api.php/Posts/Comments/" + postId;
+        const url = "http://localhost:8000/api/posts/" + postId + "/comments";
         try {
-            const response = await fetch(url)
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Bearer' + token
+                }
+            });
             if (!response.ok) throw new Error("");
             const data = await response.json()
             if (data) {
-                setComments(data)
+                setComments(data.comments)
             }
         }
         catch (error) {
@@ -185,16 +203,16 @@ function Post({ postData, forProfile, setRefresh }) {
         const submittedComment = comment.current.value;
         if (submittedComment) {
             const obj = {
-                UserId: currentUserId,
-                PostId: postId,
-                Comment: submittedComment
+                user_id: currentUserId,
+                comment: submittedComment
             }
-            const url = "http://localhost/SharingPlatform/api.php/Posts/Comments";
+            const url = "http://localhost:8000/api/posts/" + postId + "/comments";
             try {
                 const response = await fetch(url, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
+                        'Authorization': "Bearer" + token
                     },
                     body: JSON.stringify(obj),
                 });
@@ -214,11 +232,15 @@ function Post({ postData, forProfile, setRefresh }) {
 
     // profile methods
     async function handleDelete() {
-        const url = "http://localhost/SharingPlatform/api.php/Posts/" + postId;
+        const url = "http://localhost:8000/api/posts/" + postId;
+        console.log(url)
         try {
             setRefresh(false)
             const response = await fetch(url, {
-                method: "DELETE"
+                method: "DELETE",
+                headers: {
+                    'Authorization': "Bearer" + token
+                }
             });
             if (!response.ok) throw new Error("");
             setRefresh(true)
@@ -230,17 +252,17 @@ function Post({ postData, forProfile, setRefresh }) {
 
     function handleEdit() {
         const data = {
-            PostID: postId,
-            PostTitle: postData.Title,
-            PostDescription: postData.Description,
-            PostLink: postData.Link,
-            PostCode: postData.CodeSnippet
+            id: postData.id,
+            title: postData.title,
+            description: postData.description,
+            link: postData.link,
+            codesnippet: postData.codesnippet
         }
         navigate('/EditPost', { state: data });
     }
 
     return (
-        
+
         <div className={styles.container}>
 
             <div className={styles.row1}>
@@ -256,7 +278,7 @@ function Post({ postData, forProfile, setRefresh }) {
                                 <div className={styles.reactionContainer}>< SlDislike className={`${disliked ? styles.active : null}`} onClick={() => handleReaction("Dislike")} /></div>
                             </>
                             : <>
-                                <div className={styles.reactionContainer}>< FaPen onClick={handleEdit}/></div>
+                                <div className={styles.reactionContainer}>< FaPen onClick={handleEdit} /></div>
                                 <div className={styles.reactionContainer}>< MdDelete className={styles.icon} onClick={handleDelete} /></div>
                             </>
                     }
@@ -287,7 +309,7 @@ function Post({ postData, forProfile, setRefresh }) {
                 tags && tags.length > 0
                     ? <div className={styles.tags}>
                         {
-                            tags.map((tag, index) => <span key={index}>#{tag.Name} </span>)
+                            tags.map((tag, index) => <span key={index}>#{tag.name} </span>)
                         }
                     </div>
                     : null
@@ -325,7 +347,7 @@ function Post({ postData, forProfile, setRefresh }) {
                         <div className={styles.subCommentsField}>
                             {
                                 comments && comments.length > 0
-                                    ? comments.map((obj, index) => <div className={styles.comment} key={index}><p className={styles.commentUsername}>{obj.Username}</p><p>{obj.Comment}</p></div>)
+                                    ? comments.map((obj, index) => <div className={styles.comment} key={index}><p className={styles.commentUsername}>{obj.user.username}</p><p>{obj.comment}</p></div>)
                                     : <p className={styles.redHighlight}>No Comments yet</p>
                             }
                         </div>
@@ -342,7 +364,7 @@ function Post({ postData, forProfile, setRefresh }) {
                                     <div className={styles.subCommentsField}>
                                         {
                                             reactions && reactions.length > 0
-                                                ? reactions.map((obj, index) => <div className={styles.comment} key={index}><p><span className={styles.commentUsername}>{obj.Username}</span> {obj.Reaction}d your post.</p></div>)
+                                                ? reactions.map((obj, index) => <div className={styles.comment} key={index}><p><span className={styles.commentUsername}>{obj.user.username}</span> {obj.reaction}d your post.</p></div>)
                                                 : <p className={styles.redHighlight}>No reactions yet</p>
                                         }
                                     </div>

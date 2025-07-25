@@ -16,15 +16,20 @@ function Search() {
         setPosts([])
         e.preventDefault();
         const searchParameter = searchInputField.current.value;
-        console.log(searchParameter)
         if (searchParameter) {
-            const url = "http://localhost/SharingPlatform/api.php/Posts/Search/" + searchParameter;
+            const url = "http://localhost:8000/api/posts?search=" + searchParameter;
             try {
-                const response = await fetch(url)
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': 'Bearer' + token
+                    }
+                });
                 if (!response.ok) throw new Error("Response Failed");
                 const data = await response.json()
                 if (data) {
-                    setPosts(data)
+                    setPosts(data.posts)
                 }
             }
             catch (error) {

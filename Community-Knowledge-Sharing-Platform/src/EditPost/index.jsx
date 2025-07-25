@@ -26,13 +26,18 @@ function EditPost() {
     const link = useRef(null)
     const code = useRef(null)
 
+    // for testing
+    useEffect(() => {
+        console.log(data.id)
+    }, [])
+
     // fill the fields
     useEffect(() => {
         if (data) {
-            title.current.value = data.PostTitle;
-            description.current.value = data.PostDescription;
-            link.current.value = data.PostLink;
-            code.current.value = data.PostCode;
+            title.current.value = data.title;
+            description.current.value = data.description;
+            link.current.value = data.link;
+            code.current.value = data.codesnippet;
         }
     }, [data])
 
@@ -46,14 +51,13 @@ function EditPost() {
         let submittedCode = code.current.value ? code.current.value : "";
 
         const postData = {
-            Title: submittedTitle,
-            Description: submittedDescription,
-            Link: submittedLink,
-            CodeSnippet: submittedCode,
-            UserId: id
+            title: submittedTitle,
+            description: submittedDescription,
+            link: submittedLink,
+            codesnippet: submittedCode,
         }
 
-        if (postData.Title && postData.Description && postData.UserId) {
+        if (postData.title && postData.description) {
             let result = await editPost(postData);
             if (result) {
                 form.current.reset();
@@ -62,13 +66,16 @@ function EditPost() {
         }
     }
     async function editPost(formData) {
-        const url = "http://localhost/SharingPlatform/api.php/Posts/" + data.PostID;
+        const url = "http://localhost:8000/api/posts/" + data.id;
         const requestData = formData
+        console.log(requestData)
+        console.log(url)
         try {
             const response = await fetch(url, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
+                    'Authorization': 'Bearer' + token
                 },
                 body: JSON.stringify(requestData),
             });

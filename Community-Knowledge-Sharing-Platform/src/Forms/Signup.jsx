@@ -1,143 +1,134 @@
 import styles from "./style.module.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
 
 function SignUp() {
-
   const navigate = useNavigate();
-
-  // username validation
-  const [usernameError, setUsernameError] = useState('');
-  async function checkUserAvailable(username) {
-    const url = "http://localhost/SharingPlatform/api.php/Users/CheckUser/" + username;
-    try {
-      const response = await fetch(url)
-      if (!response.ok) throw new Error("");
-      return true
-    }
-    catch (error) {
-      return false
-    }
-  }
-  async function handleUsernameBlur(e) {
-    const username = e.target.value;
-    let usernameAvailable = await checkUserAvailable(username)
-    if (usernameAvailable) {
-      setUsernameError("Username not available, try another one.")
-      e.target.value = ""
-    }
-    else setUsernameError('');
-  }
-
   const location = useLocation();
   const { manager } = location.state || {};
 
-  // password and confrim password validation
+  const [usernameError, setUsernameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  function handlePasswordBlur(e) {
-    const submittedPassword = e.target.value;
-    if (submittedPassword && submittedPassword.length > 0) {
-      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-      if (!passwordRegex.test(submittedPassword)) setPasswordError('Password must be at least 8 characters, containing a number, lowercase and uppercase characters.');
-      else setPasswordError('');
-    }
-    else setPasswordError('');
-  };
   const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  function handleConfirmPasswordBlur(e) {
-    let submittedConfirmPassword = e.target.value;
-    if (submittedConfirmPassword && formData.Password) {
-      if (submittedConfirmPassword !== formData.Password) {
-        setFormData(prevState => ({
-          ...prevState,
-          ConfirmedPassword: ''
-        }));
-        setConfirmPasswordError("Passwords don't match.")
-      }
-      else setConfirmPasswordError("")
-    }
-    else setConfirmPasswordError("")
-  }
-
-  // handle submission
   const [error, setError] = useState(null);
   const [missingField, setMissingField] = useState(null);
+
   const [formData, setFormData] = useState({
-    FullName: '',
-    Username: '',
-    PhoneNumber: '',
-    Password: '',
-    ConfirmedPassword: '',
-    Role: manager ? "Manager" : "User"
+    fullname: '',
+    username: '',
+    phonenumber: '',
+    password: '',
+    password_confirmation: '',
+    role: manager ? "Manager" : "User"  // ✅ changed to lowercase
   });
+
   function handleChange(e) {
     const { name, value } = e.target;
-    setFormData(prevState => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       [name]: value
     }));
-  };
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (formData.FullName && formData.Username && formData.PhoneNumber && formData.Password && formData.ConfirmedPassword) {
-      addNewUser(formData);
-      setFormData({
-        FullName: '',
-        Username: '',
-        PhoneNumber: '',
-        Password: '',
-        ConfirmedPassword: '',
-        Role: "User"
+  }
+
+  async function checkUserAvailable(username) {
+    const url = `http://localhost:8000/api/check-username?username=${username}`;
+    try {
+      const response = await fetch(url,{
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer' + token
+        },
       });
-    }
-    else {
-      if (!formData.FullName || !formData.Username || !formData.PhoneNumber || !formData.Password || !formData.ConfirmedPassword) setMissingField(true)
+      if (!response.ok) throw new Error("");
+      const available = await response.json();
+      return available.available;
+    } catch (error) {
+      return false;
     }
   }
+
+  async function handleUsernameBlur(e) {
+    const username = e.target.value;
+    const available = await checkUserAvailable(username);
+    if (!available) {
+      setUsernameError("Username not available, try another one.");
+      setFormData(prev => ({ ...prev, username: '' }));
+    } else {
+      setUsernameError('');
+    }
+  }
+
+  function handlePasswordBlur(e) {
+    const password = e.target.value;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (password && !passwordRegex.test(password)) {
+      setPasswordError('Password must be at least 8 characters, containing a number, lowercase and uppercase characters.');
+    } else {
+      setPasswordError('');
+    }
+  }
+
+  function handleConfirmPasswordBlur(e) {
+    const confirmPassword = e.target.value;
+    if (confirmPassword && formData.password !== confirmPassword) {
+      setFormData(prev => ({ ...prev, password_confirmation: '' }));
+      setConfirmPasswordError("Passwords don't match.");
+    } else {
+      setConfirmPasswordError('');
+    }
+  }
+
   async function addNewUser(formData) {
-    const url = "http://localhost/SharingPlatform/api.php/Users";
-    const requestData = formData
+    const url = "http://localhost:8000/api/register";
     try {
-      setError(false)
+      setError(false);
       const response = await fetch(url, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestData),
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer" + token },
+        body: JSON.stringify(formData)
       });
       if (!response.ok) throw new Error("SignUp Failed");
       const data = await response.json();
       if (data) {
-        if (manager) {
-          navigate("/Homepage")
-        }
-        else {
-          navigate("/")
-        }
+        navigate(manager ? "/Homepage" : "/");
         setError(false);
       }
     } catch (err) {
-      // handle error
+      setError(true);
     }
   }
 
-  // handle reset
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (formData.fullname && formData.username && formData.phonenumber && formData.password && formData.password_confirmation) {
+      addNewUser(formData);
+      setFormData({
+        fullname: '',
+        username: '',
+        phonenumber: '',
+        password: '',
+        password_confirmation: '',
+        role: "User"  // ✅ lowercase
+      });
+    } else {
+      setMissingField(true);
+    }
+  }
+
   function handleReset() {
-    setMissingField(0)
-    setUsernameError(0)
-    setPasswordError(0)
-    setConfirmPasswordError(0)
-    setFormData(
-      {
-        FullName: '',
-        Username: '',
-        PhoneNumber: '',
-        Password: '',
-        ConfirmedPassword: '',
-        Role: 'User'
-      }
-    )
+    setMissingField(false);
+    setUsernameError('');
+    setPasswordError('');
+    setConfirmPasswordError('');
+    setFormData({
+      fullname: '',
+      username: '',
+      phonenumber: '',
+      password: '',
+      password_confirmation: '',
+      role: 'User'  // ✅ lowercase
+    });
   }
 
   return (
@@ -148,96 +139,80 @@ function SignUp() {
       </div>
 
       <div className={styles.container}>
-        <label className={styles.label} htmlFor="name">
-          Full Name
-        </label>
+        <label className={styles.label} htmlFor="name">Full Name</label>
         <input
           type="text"
           id="name"
-          className={`${styles.input}`}
-          name="FullName"
-          value={formData.FullName}
-          onChange={handleChange} />
+          className={styles.input}
+          name="fullname"
+          value={formData.fullname}
+          onChange={handleChange}
+        />
       </div>
 
       <div className={styles.container}>
-        <label className={styles.label} htmlFor="username">
-          Username
-        </label>
+        <label className={styles.label} htmlFor="username">Username</label>
         <input
           onBlur={handleUsernameBlur}
-          name="Username"
-          value={formData.Username}
+          name="username"
+          value={formData.username}
           onChange={handleChange}
-          type="text" id="username"
-          className={`${styles.input} ${usernameError ? styles.inputError : null}`}
+          type="text"
+          id="username"
+          className={`${styles.input} ${usernameError ? styles.inputError : ''}`}
         />
-        {usernameError ? <div style={{ color: 'red' }}>{usernameError}</div> : null}
+        {usernameError && <div style={{ color: 'red' }}>{usernameError}</div>}
       </div>
 
       <div className={styles.container}>
-        <label className={styles.label} htmlFor="number">
-          Phone Number
-        </label>
+        <label className={styles.label} htmlFor="number">Phone Number</label>
         <input
           type="number"
-          name="PhoneNumber"
-          value={formData.PhoneNumber}
+          name="phonenumber"
+          value={formData.phonenumber}
           onChange={handleChange}
           id="number"
-          className={`${styles.input}`}
+          className={styles.input}
         />
       </div>
 
       <div className={styles.container}>
-        <label className={styles.label} htmlFor="password">
-          Password
-        </label>
+        <label className={styles.label} htmlFor="password">Password</label>
         <input
           onBlur={handlePasswordBlur}
-          name="Password"
-          value={formData.Password}
+          name="password"
+          value={formData.password}
           onChange={handleChange}
           type="password"
           id="password"
-          className={`${styles.input} ${passwordError ? styles.inputError : null}`}
+          className={`${styles.input} ${passwordError ? styles.inputError : ''}`}
         />
-        {passwordError ? <div style={{ color: 'red' }}>{passwordError}</div> : null}
+        {passwordError && <div style={{ color: 'red' }}>{passwordError}</div>}
       </div>
 
       <div className={styles.container}>
-        <label className={styles.label} htmlFor="confirmPassword">
-          Confirm Password
-        </label>
+        <label className={styles.label} htmlFor="confirmPassword">Confirm Password</label>
         <input
           onBlur={handleConfirmPasswordBlur}
-          name="ConfirmedPassword"
-          value={formData.ConfirmedPassword}
+          name="password_confirmation"
+          value={formData.password_confirmation}
           onChange={handleChange}
           type="password"
           id="confirmPassword"
-          className={`${styles.input} ${confirmPasswordError ? styles.inputError : null}`}
+          className={`${styles.input} ${confirmPasswordError ? styles.inputError : ''}`}
         />
-        {confirmPasswordError ? <div style={{ color: 'red' }}>{confirmPasswordError}</div> : null}
+        {confirmPasswordError && <div style={{ color: 'red' }}>{confirmPasswordError}</div>}
       </div>
 
-      {
-        missingField ? <div style={{ color: 'red', textAlign: "start" }}>All fields are required</div> : null
-      }
+      {missingField && <div style={{ color: 'red', textAlign: "start" }}>All fields are required</div>}
 
       <div className={styles.buttonsContainer}>
-        <button className={styles.cancel} type="reset">
-          Cancel
-        </button>
-        <button className={styles.submit} type="submit">
-          Sign Up
-        </button>
+        <button className={styles.cancel} type="reset">Cancel</button>
+        <button className={styles.submit} type="submit">Sign Up</button>
       </div>
-
 
     </form>
   );
-
 }
 
 export default SignUp;

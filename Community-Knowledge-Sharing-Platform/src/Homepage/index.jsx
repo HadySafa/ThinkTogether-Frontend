@@ -33,19 +33,27 @@ function Homepage() {
   // show all posts
   const [posts, setPosts] = useState([])
   async function getAllPosts() {
-    const url = "http://localhost/SharingPlatform/api.php/Posts";
+    const url = "http://localhost:8000/api/posts";
     try {
-      const response = await fetch(url)
-      if (!response.ok) throw new Error("");
-      const data = await response.json()
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer' + token
+        }
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch posts");
+      const data = await response.json();
       if (data) {
-        setPosts(shuffleArray(data))
+        setPosts(shuffleArray(data.posts));
       }
-    }
-    catch (error) {
-      //setError(error.message)
+    } catch (error) {
+      // setError(error.message);
+      console.error(error);
     }
   }
+
   useEffect(() => { getAllPosts(); }, [])
 
 
@@ -72,13 +80,19 @@ function Homepage() {
 
   // top posts 
   async function getTopPosts() {
-    const url = "http://localhost/SharingPlatform/api.php/Posts/Top";
+    const url = "http://localhost:8000/api/posts/top";
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer' + token
+        }
+      });
       if (!response.ok) throw new Error("");
       const data = await response.json()
       if (data) {
-        setPosts(data)
+        setPosts(data.posts)
       }
     }
     catch (error) {
@@ -88,12 +102,18 @@ function Homepage() {
 
   // filter by categories
   async function getPostsByCategories(selectedCategory) {
-    const url = 'http://localhost/SharingPlatform/api.php/Posts/Category/' + selectedCategory;
+    const url = "http://localhost:8000/api/category/" + selectedCategory + "/posts";
     try {
-      const response = await fetch(url)
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer' + token
+        }
+      });
       if (!response.ok) throw new Error("Failed")
       const data = await response.json()
-      if (data) setPosts(data)
+      if (data) setPosts(data.posts)
     }
     catch (err) {
       // handle error
@@ -152,7 +172,7 @@ function Homepage() {
               {
                 categories && categories.length > 0
                   ? <div className={styles.categoriesContainer}>
-                    {categories.map((obj, index) => <p key={index} onClick={() => chooseCategory(obj.Id, obj.Name)}>{obj.Name}</p>)}
+                    {categories.map((obj, index) => <p key={index} onClick={() => chooseCategory(obj.id, obj.name)}>{obj.name}</p>)}
                   </div>
                   : null
               }
