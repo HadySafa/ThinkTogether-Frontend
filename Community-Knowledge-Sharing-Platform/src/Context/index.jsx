@@ -50,7 +50,7 @@ export const MyProvider = ({ children }) => {
   const [categories, setCategories] = useState([])
   const [categoriesLoading, setCategoriesLoading] = useState(false)
   const [categoriesError, setCategoriesError] = useState(false)
-  const [refreshCategories, setRefreshCategories] = useState(true)
+  const [refreshCategories, setRefreshCategories] = useState(false)
 
   // get categories
   async function getAllCategories() {
@@ -78,6 +78,7 @@ export const MyProvider = ({ children }) => {
     }
 
   }
+  useEffect(() => { if (token) getAllCategories() }, [token])
   useEffect(() => { if (refreshCategories) getAllCategories() }, [refreshCategories])
 
   return (

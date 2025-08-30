@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import MyContext from '../Context';
 import logo from '../assets/logo.png'
 
-function Header({ homeActive, profileActive, makePostActive, searchActive }) {F
+function Header({ homeActive, profileActive, makePostActive, searchActive }) {
 
     const navigate = useNavigate(null)
     const { setToken } = useContext(MyContext);

@@ -55,6 +55,13 @@ function Post({ postData, forProfile, setRefresh }) {
         );
     }
 
+    const { token } = useContext(MyContext);
+    useEffect(() => {
+        if (!token) {
+            navigate('/');
+        }
+    }, [token]);
+
     // function to get reaction
     async function getReaction() {
         const url = "http://localhost:8000/api/posts/" + postId + "/reactions";
@@ -99,8 +106,7 @@ function Post({ postData, forProfile, setRefresh }) {
             const response = await fetch(url, {
                 method: 'GET',
                 headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Bearer' + token
+                    'Accept': 'application/json'
                 }
             });
             if (!response.ok) throw new Error("");
